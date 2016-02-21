@@ -1,2 +1,2 @@
 # Repongo
-A Repository pattern implementation for MongoDB and node
+A Javascript-based Repository pattern implementation for MongoDB.
