@@ -8,7 +8,7 @@ describe('With an empty Repository,', function(){
 
     var db = repongo('mongodb://localhost/repongo_test');
     var catSchema = new db.Schema('cat');
-    var repoUnderTest = db.repoFor(catSchema);
+    var repoUnderTest = db.createRepo(catSchema);
 
     describe('when a cat is inserted', function(){
         it('Inserts one record that can be read back', function(done){

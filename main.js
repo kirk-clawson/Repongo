@@ -7,19 +7,17 @@
     var mongo = require('mongojs');
     var Schema = require('./lib/schema.js');
     var Repository = require('./lib/repository.js');
-    var Builder = require('./lib/queryBuilder.js');
 
     module.exports = function (connectionString) {
         var mongodb = mongo(connectionString);
 
-        function getRepo(schema) {
+        function createRepo(schema) {
             return new Repository(schema, mongodb);
         }
 
         return {
             Schema: Schema,
-            QueryBuilder: Builder,
-            repoFor: getRepo
+            createRepo: createRepo
         }
     };
 }());
