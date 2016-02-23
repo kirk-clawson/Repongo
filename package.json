@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/kirk-clawson/Repongo#readme",
   "dependencies": {
+    "lodash": "^4.5.1",
     "merge": "^1.2.0",
     "mongojs": "^2.3.0"
   },
