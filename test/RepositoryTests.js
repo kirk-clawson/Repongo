@@ -27,6 +27,6 @@ describe('With an empty Repository,', function(){
     });
 
     afterEach(function(){
-        repoUnderTest.clear();
+        repoUnderTest._clear();
     });
 });
