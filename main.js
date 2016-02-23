@@ -1,23 +1,25 @@
 /**
  * Created by Kirk.Clawson on 2/21/2016.
  */
-var mongo = require('mongojs');
-var Schema = require('./lib/schema.js');
-var Repository = require('./lib/repository.js');
-var Builder = require('./lib/queryBuilder.js');
+(function(){
+    "use strict";
 
-var repongo = function(connectionString){
-    var mongodb = mongo(connectionString);
+    var mongo = require('mongojs');
+    var Schema = require('./lib/schema.js');
+    var Repository = require('./lib/repository.js');
+    var Builder = require('./lib/queryBuilder.js');
 
-    function getRepo(schema) {
-        return new Repository(schema, mongodb);
-    }
+    module.exports = function (connectionString) {
+        var mongodb = mongo(connectionString);
 
-    return {
-        Schema: Schema,
-        QueryBuilder: Builder,
-        repoFor: getRepo
-    }
-};
+        function getRepo(schema) {
+            return new Repository(schema, mongodb);
+        }
 
-module.exports = repongo;
+        return {
+            Schema: Schema,
+            QueryBuilder: Builder,
+            repoFor: getRepo
+        }
+    };
+}());
