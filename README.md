@@ -11,14 +11,15 @@ npm install repongo
 
 [MongoDB connection string documentation](http://docs.mongodb.org/manual/reference/connection-string/)
 
-Examples:
+Examples for simple repository actions:
 ```JavaScript
 // connecting to a server
 // the connection string format is documented at the above link
 var db = require('repongo')('mongodb://localhost/my_database');
 
 // get an instance of an untyped repository for the catalog "cats"
-// this repository won't check your object formats to ensure they conform to a specific schema
+// if the repository exists, this opens it; if not, this will create, then open it
+// this repository won't validate your objects against a schema
 var repo = db.createRepo('cats');
 
 // Insert data (or update if the object passed in already has an _id property)
@@ -50,5 +51,33 @@ repo.getAll()
 repo.delete(pugglesId)
     .then(function(result) {
         console.log('Bye, bye, Mr. Puggles. :(');
+    });
+```
+
+Examples of setting up a Schema:
+```JavaScript
+var db = require('repongo')('mongodb://localhost/my_database');
+
+var catFields = {
+    name: { required: true },
+    age: { type: db.types.int }
+};
+
+var schemaOpts = {
+    catalog: 'cats',
+    fields: catFields,
+    keepExtraFields: true
+};
+
+var catSchema = db.createSchema(schemaOpts);
+var repo = db.createRepo(catSchema);
+
+var badCat = { age: 'xyz' };
+repo.save(badCat)
+    .catch(function (err) {
+        console.log(err.message);
+        console.log(err.data); // returns your object as-is with one additional property called _validationResult  
+                               // it will contain the validation errors for the missing name field and the invalid
+                               // age data type
     });
 ```

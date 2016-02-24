@@ -16,10 +16,14 @@
             return new Repository(schema, mongodb);
         }
 
+        function createSchema(options) {
+            return new Schema(options);
+        }
+
         return {
-            Schema: Schema,
             QueryBuilder: QueryBuilder,
-            createRepo: createRepo
+            createRepo: createRepo,
+            createSchema: createSchema,
         }
     };
 }());
