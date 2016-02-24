@@ -8,6 +8,7 @@
     var Schema = require('./lib/schema.js');
     var Repository = require('./lib/repository.js');
     var QueryBuilder = require('./lib/queryBuilder.js');
+    var types = require('./lib/dataConverters.js');
 
     module.exports = function (connectionString) {
         var mongodb = mongo(connectionString);
@@ -21,9 +22,10 @@
         }
 
         return {
-            QueryBuilder: QueryBuilder,
             createRepo: createRepo,
-            createSchema: createSchema
+            createSchema: createSchema,
+            QueryBuilder: QueryBuilder,
+            types: types
         }
     };
 }());

@@ -7,8 +7,7 @@ var should = require('should');
 describe('With an empty Repository,', function () {
 
     var db = repongo('mongodb://localhost/repongo_test');
-    var catSchema = new db.Schema('cat');
-    var repoUnderTest = db.createRepo(catSchema);
+    var repoUnderTest = db.createRepo('cat');
 
     describe('when a cat is inserted', function () {
         it('Inserts one record that can be read back', function (done) {
