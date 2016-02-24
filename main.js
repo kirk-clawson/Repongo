@@ -1,7 +1,7 @@
 /**
  * Created by Kirk.Clawson on 2/21/2016.
  */
-(function(){
+(function () {
     "use strict";
 
     var mongo = require('mongojs');
@@ -23,7 +23,7 @@
         return {
             QueryBuilder: QueryBuilder,
             createRepo: createRepo,
-            createSchema: createSchema,
+            createSchema: createSchema
         }
     };
 }());
