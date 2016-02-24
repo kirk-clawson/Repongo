@@ -15,7 +15,7 @@ var pugglesId;
 
 repo.save({name: 'Mr. Puggles', age: 6})
     .then(function (result) {
-        console.log(result); // returns object after saving, including an /_id property with the Mongo PK
+        console.log(result); // returns object after saving, including an \_id property with the Mongo PK
         pugglesId = result._id;
     });
     
