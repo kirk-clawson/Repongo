@@ -1,5 +1,5 @@
 # Repongo
-A repository pattern implementation for MongoDB based on MongoJS. This project offer 3 primary features:
+A repository pattern implementation for MongoDB based on MongoJS. This project offers 3 primary features:
 - Repository pattern with simple data objects
 - Optional schema definition and validation in and out of the repository.
 - A query builder system to easily create custom queries
