@@ -8,7 +8,7 @@
     var Schema = require('./lib/schema.js');
     var Repository = require('./lib/repository.js');
     var QueryBuilder = require('./lib/queryBuilder.js');
-    var types = require('./lib/dataConverters.js');
+    var types = require('./lib/validators.js');
 
     module.exports = function (connectionString) {
         var mongodb = mongo(connectionString);
