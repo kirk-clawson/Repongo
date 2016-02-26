@@ -10,7 +10,7 @@ describe('With an empty Repository,', function () {
     describe('And a defined schema', function(){
         var catFields = {
             name: {isRequired: true},
-            age: {type: db.types.int}
+            age: {type: db.validators.int()}
         };
         var schemaOpts = {
             catalog: 'cats',
