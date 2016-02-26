@@ -8,7 +8,7 @@
     var Schema = require('./lib/schema.js');
     var Repository = require('./lib/repository.js');
     var QueryBuilder = require('./lib/queryBuilder.js');
-    var types = require('./lib/validators.js');
+    var validators = require('./lib/validators.js');
 
     module.exports = function (connectionString) {
         var mongodb = mongo(connectionString);
@@ -25,7 +25,7 @@
             createRepo: createRepo,
             createSchema: createSchema,
             QueryBuilder: QueryBuilder,
-            types: types
+            validators: validators
         }
     };
 }());
