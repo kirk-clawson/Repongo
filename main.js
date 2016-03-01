@@ -25,7 +25,7 @@
             createRepo: createRepo,
             createSchema: createSchema,
             QueryBuilder: QueryBuilder,
-            validators: validators
+            validators: validators.factory
         }
     };
 }());
