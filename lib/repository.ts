@@ -6,10 +6,9 @@ import * as Schema from "./schema";
 import {IQuery} from "./queryBuilder";
 import {IMongoObject, getIdFromString} from "./util";
 
-export interface IRepositoryPromise<T> {
-    then<U>(onFulfill: (value: T) => U | PromiseLike<U>, onReject?: (error: any) => U | PromiseLike<U>, onProgress?: (note: any) => any): IRepositoryPromise<U>;
+export interface IRepositoryPromise<T> extends PromiseLike<T> {
     catch(onReject?: (error: any) => T | PromiseLike<T> | void | PromiseLike<void>): IRepositoryPromise<T>;
-    finally<U>(handler: () => U | PromiseLike<U>): IRepositoryPromise<T>;
+    finally<TResult>(handler: () => TResult | PromiseLike<TResult>): IRepositoryPromise<T>;
 }
 
 export interface IRepository {
