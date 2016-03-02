@@ -1,14 +1,10 @@
-///<reference path="../typings/node.d.ts"/>
 ///<reference path="../typings/bluebird.d.ts"/>
-
-import {IMongoObject} from "./util";
-var mongo = require('mongojs');
 
 import * as _ from 'lodash';
 import * as Promise from 'bluebird';
-import * as utils from './util';
 import * as Schema from "./schema";
 import {IQuery} from "./queryBuilder";
+import {IMongoObject, getIdFromString} from "./util";
 
 export interface IRepositoryPromise<T> {
     then<U>(onFulfill: (value: T) => U | PromiseLike<U>, onReject?: (error: any) => U | PromiseLike<U>, onProgress?: (note: any) => any): IRepositoryPromise<U>;
@@ -51,7 +47,7 @@ class Repository implements IRepository {
 
     public get(id: string): IRepositoryPromise<any> {
         return this._promiseApi
-            .findOne({ _id: utils.getIdFromString(id) })
+            .findOne({ _id: getIdFromString(id) })
             .then((doc) => this._schema.m2j(doc));
     }
 
