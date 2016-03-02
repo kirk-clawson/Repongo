@@ -60,6 +60,7 @@ $RECYCLE.BIN/
 *.iml
 
 ## Directory-based project format:
+lib/*.js
 *.js.map
 .idea/
 # if you remove the above rule, at least ignore the following:
