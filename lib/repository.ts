@@ -1,6 +1,7 @@
 ///<reference path="../typings/node.d.ts"/>
 ///<reference path="../typings/bluebird.d.ts"/>
 
+import {IMongoObject} from "./util";
 var mongo = require('mongojs');
 
 import * as _ from 'lodash';
@@ -44,36 +45,49 @@ class Repository implements IRepository {
         }
     }
 
-    getAll(): IRepositoryPromise<any[]> {
+    public getAll(): IRepositoryPromise<any[]> {
         return this._promiseApi.find({}).then((doc) => this._schema.m2j(doc));
     }
 
-    get(id: string): IRepositoryPromise<any> {
+    public get(id: string): IRepositoryPromise<any> {
         return this._promiseApi
             .findOne({ _id: utils.getIdFromString(id) })
             .then((doc) => this._schema.m2j(doc));
     }
 
-    query(query: IQuery): IRepositoryPromise<any[]> {
+    public query(query: IQuery): IRepositoryPromise<any[]> {
         return this._promiseApi.find(query.encode()).then((doc) => this._schema.m2j(doc));
     }
 
-    save(item: any): IRepositoryPromise<any> {
+    public save(item: any): IRepositoryPromise<any> {
         // assume that item is singular
         var result = this._schema.j2m(item);
-        if (result && result._validationResult && result._validationResult.isValid) {
-            delete result._validationResult; // don't want to persist this field in the DB
-            return this._promiseApi.save(result).then((doc) => this._schema.m2j(doc));
+        var validResult;
+        if (_.isArray(result)) {
+            validResult = [];
+            for (var i = 0; i < result.length; ++i){
+                if(result[i] && result[i]._validationResult && result[i]._validationResult.isValid) {
+                    delete result[i]._validationResult;
+                    validResult.push(result);
+                }
+            }
+            return this._promiseApi.save(validResult).then((doc) => this._schema.m2j(doc));
         } else {
-            return Promise.reject({ message: 'Item failed schema validation check.', data: result});
+            validResult = <IMongoObject>result;
+            if (validResult && validResult._validationResult && validResult._validationResult.isValid) {
+                delete validResult._validationResult; // don't want to persist this field in the DB
+                return this._promiseApi.save(validResult).then((doc) => this._schema.m2j(doc));
+            } else {
+                return Promise.reject({ message: 'Item failed schema validation check.', data: result});
+            }
         }
     }
 
-    delete(id: string): IRepositoryPromise<any> {
+    public delete(id: string): IRepositoryPromise<any> {
         return undefined;
     }
 
-    clear(): void {
+    public clear(): void {
         this._dbCollection.remove({});
     }
 }
