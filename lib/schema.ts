@@ -2,6 +2,10 @@ import * as validators from './validators';
 import * as utils from './util';
 import * as _ from 'lodash';
 
+interface ICatalog {
+    catalogName: string;
+}
+
 interface IField {
     fieldName: string;
     isRequired: boolean;
@@ -11,15 +15,14 @@ interface IField {
     customValidator(value: any): string | string[];
 }
 
-export interface ISchemaOptions {
-    catalogName: string;
+export interface ISchemaOptions extends ICatalog {
     allowExtraDBFields?: boolean;
     allowExtraJsonFields?: boolean;
     fields?: IField[];
 }
 
-export interface ISchema extends ISchemaOptions {
-    validate(object: any) : void;
+export interface ISchema extends ICatalog {
+    validate(object: any): void;
     j2m(json: any): utils.IMongoObject | utils.IMongoObject[];
     m2j(bson: utils.IMongoObject | utils.IMongoObject[]): any;
 }
@@ -43,10 +46,10 @@ var defaultOptions: ISchemaOptions = {
 };
 
 class Schema implements ISchema {
-    catalogName: string;
-    allowExtraDBFields: boolean;
-    allowExtraJsonFields: boolean;
-    fields: IField[];
+    public catalogName: string;
+    private allowExtraDBFields: boolean;
+    private allowExtraJsonFields: boolean;
+    private fields: IField[];
 
     constructor(init: ISchemaOptions) {
         this.catalogName = init.catalogName;
@@ -55,7 +58,7 @@ class Schema implements ISchema {
         this.fields = _.map(init.fields, _.cloneDeep);
     }
 
-    validate(object: any): void {
+    public validate(object: any): void {
         if (_.isNil(object)) {
             throw 'Cannot validate null or undefined.';
         }
@@ -76,7 +79,7 @@ class Schema implements ISchema {
         }
     }
 
-    j2m(json: any): utils.IMongoObject | utils.IMongoObject[] {
+    public j2m(json: any): utils.IMongoObject | utils.IMongoObject[] {
         var bson = null;
         if (_.isArray(json)) {
             bson = [];
@@ -100,7 +103,7 @@ class Schema implements ISchema {
         return bson;
     }
 
-    m2j(bson: utils.IMongoObject | utils.IMongoObject[]): any {
+    public m2j(bson: utils.IMongoObject | utils.IMongoObject[]): any {
         var json = null;
         var current;
         if (_.isArray(bson)) {
@@ -154,7 +157,7 @@ class Schema implements ISchema {
         return result;
     }
 
-    private static convertBsonToJson(bson : utils.IMongoObject): any {
+    private static convertBsonToJson(bson: utils.IMongoObject): any {
         // assumes bson object will always have an _id property, which will always be true with a doc returned from mongo
         var json = bson;
         json._id = bson._id.toString(); // convert mongo id object to string
