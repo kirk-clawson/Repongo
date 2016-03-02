@@ -80,7 +80,7 @@ class Schema implements ISchema {
     }
 
     public j2m(json: any): utils.IMongoObject | utils.IMongoObject[] {
-        var bson = null;
+        var bson: any = null;
         if (_.isArray(json)) {
             bson = [];
             for (var i = 0; i < json.length; ++i) {
@@ -104,19 +104,18 @@ class Schema implements ISchema {
     }
 
     public m2j(bson: utils.IMongoObject | utils.IMongoObject[]): any {
-        var json = null;
-        var current;
+        var json: any = null;
         if (_.isArray(bson)) {
             json = [];
             for (var i = 0; i < bson.length; i++) {
-                current = Schema.convertBsonToJson(bson[i]);
+                let current = Schema.convertBsonToJson(bson[i]);
                 this.validate(current);
                 if (current._validationResult._isValid) {
                     json.push(current);
                 }
             }
         } else {
-            current = Schema.convertBsonToJson(bson);
+            let current = Schema.convertBsonToJson(bson);
             this.validate(current);
             if (current._validationResult._isValid) {
                 json = current;
@@ -126,7 +125,7 @@ class Schema implements ISchema {
     }
 
     private static validateField(field: IField, fieldValue: any): string[] {
-        var result = [];
+        var result: string[] = [];
         // Required validation
         if (field.isRequired && (fieldValue == null || fieldValue == undefined)) {
             result.push(_.replace(field.requiredMessage, ':?', field.fieldName));
