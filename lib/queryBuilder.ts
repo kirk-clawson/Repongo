@@ -1,3 +1,4 @@
+///<reference path="ref.d.ts"/>
 import * as schema from './schema';
 
 export interface IQuery {

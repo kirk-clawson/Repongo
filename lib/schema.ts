@@ -1,3 +1,4 @@
+///<reference path="ref.d.ts"/>
 import * as validators from './validators';
 import * as utils from './util';
 import * as _ from 'lodash';

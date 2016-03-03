@@ -1,4 +1,4 @@
-/// <reference path="../typings/lodash.d.ts" />
+///<reference path="ref.d.ts"/>
 import * as _ from 'lodash';
 
 export interface IValidator {

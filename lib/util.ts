@@ -1,5 +1,4 @@
-///<reference path="../typings/node.d.ts"/>
-
+///<reference path="ref.d.ts"/>
 var mongo = require('mongojs');
 
 export interface IValidationStatus {

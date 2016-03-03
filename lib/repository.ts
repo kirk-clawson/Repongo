@@ -1,5 +1,4 @@
-///<reference path="../typings/bluebird.d.ts"/>
-
+///<reference path="ref.d.ts"/>
 import * as _ from 'lodash';
 import * as Promise from 'bluebird';
 import * as Schema from "./schema";
