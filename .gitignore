@@ -1,3 +1,8 @@
+### Repongo specific
+*.js.map
+*.js
+!test/*.js
+
 ### Node template
 # Logs
 logs
@@ -60,8 +65,6 @@ $RECYCLE.BIN/
 *.iml
 
 ## Directory-based project format:
-lib/*.js
-*.js.map
 .idea/
 # if you remove the above rule, at least ignore the following:
 
