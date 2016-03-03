@@ -5,8 +5,9 @@ import * as _ from 'lodash';
 import * as _schema from './lib/schema';
 import * as repository from './lib/repository';
 import {factory} from './lib/validators';
+import {create} from './lib/schema';
 
-class Repongo {
+class Connection {
     private _db: any;
     constructor(connectionString: string){
         this._db = mongo(connectionString);
@@ -15,10 +16,6 @@ class Repongo {
     createRepository(schema: string | _schema.ISchema): repository.IRepository {
         return repository.create(schema, this._db);
     }
-
-    static createSchema(options: _schema.ISchemaOptions) : _schema.ISchema {
-        return _schema.create(options);
-    }
 }
 
-export {Repongo as default, Repongo, factory as validatorFactory}
+export {Connection, factory as validators, create as schemaFactory};

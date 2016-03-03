@@ -3,26 +3,24 @@ import * as validators from './validators';
 import * as utils from './util';
 import * as _ from 'lodash';
 
-interface ICatalog {
-    catalogName: string;
-}
-
 interface IField {
     fieldName: string;
-    isRequired: boolean;
-    requiredMessage: string;
-    typeValidator: validators.IValidator;
-    typeMessage: string;
-    customValidator(value: any): string | string[];
+    isRequired?: boolean;
+    requiredMessage?: string;
+    typeValidator?: validators.IValidator;
+    typeMessage?: string;
+    customValidator?: (value: any) => string | string[];
 }
 
-export interface ISchemaOptions extends ICatalog {
+export interface ISchemaOptions {
+    catalogName: string;
     allowExtraDBFields?: boolean;
     allowExtraJsonFields?: boolean;
     fields?: IField[];
 }
 
-export interface ISchema extends ICatalog {
+export interface ISchema {
+    catalogName: string;
     validate(object: any): void;
     j2m(json: any): utils.IMongoObject | utils.IMongoObject[];
     m2j(bson: utils.IMongoObject | utils.IMongoObject[]): any;

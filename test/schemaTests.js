@@ -1,28 +1,27 @@
 /**
  * Created by Kirk.Clawson on 2/24/2016.
  */
-var repongo = require('../main.js');
+var repongo = require('../index.js');
 var should = require('should');
 
 describe('With an empty Repository,', function () {
-    var db = repongo('mongodb://localhost/my_database');
+    var db = new repongo.Connection('mongodb://localhost/my_database');
 
     describe('And a defined schema', function(){
-        var catFields = {
-            name: {isRequired: true},
-            age: {type: db.validators.int()}
-        };
-        var schemaOpts = {
-            catalog: 'cats',
-            fields: catFields,
-            keepExtraFields: true
+        var catFields = [
+            {fieldName: 'name', isRequired: true},
+            {fieldName: 'age', typeValidator: repongo.validators.int()}
+        ];
+        var schemaOptions = {
+            catalogName: 'cats',
+            fields: catFields
         };
 
-        var catSchema = db.createSchema(schemaOpts);
-        var repoUnderTest = db.createRepo(catSchema);
+        var catSchema = repongo.schemaFactory(schemaOptions);
+        var repoUnderTest = db.createRepository(catSchema);
 
         beforeEach(function () {
-            repoUnderTest._clear();
+            repoUnderTest.clear();
         });
 
         describe('when an invalid cat is inserted', function () {
@@ -34,7 +33,7 @@ describe('With an empty Repository,', function () {
                         err.message.should.not.equal('');
                         should.exist(err.data);
                         should.exist(err.data._validationResult);
-                        err.data._validationResult._isValid.should.equal(false);
+                        err.data._validationResult.isValid.should.equal(false);
                         done();
                     });
             });
