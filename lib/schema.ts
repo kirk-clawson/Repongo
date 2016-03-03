@@ -14,7 +14,6 @@ interface IField {
 
 export interface ISchemaOptions {
     catalogName: string;
-    allowExtraDBFields?: boolean;
     allowExtraJsonFields?: boolean;
     fields?: IField[];
 }
@@ -39,20 +38,18 @@ var defaultField: IField = {
 
 var defaultOptions: ISchemaOptions = {
     catalogName: null,
-    allowExtraDBFields: true,
     allowExtraJsonFields: true,
     fields: []
 };
 
+
 class Schema implements ISchema {
     public catalogName: string;
-    private allowExtraDBFields: boolean;
     private allowExtraJsonFields: boolean;
     private fields: IField[];
 
     constructor(init: ISchemaOptions) {
         this.catalogName = init.catalogName;
-        this.allowExtraDBFields = init.allowExtraDBFields;
         this.allowExtraJsonFields = init.allowExtraJsonFields;
         this.fields = _.map(init.fields, _.cloneDeep);
     }
@@ -62,20 +59,37 @@ class Schema implements ISchema {
             throw 'Cannot validate null or undefined.';
         }
 
-        object._validationResult = {
+        var result : any = {
             isValid: true
         };
+        var definedFields: string[] = [];
 
-        if (!this.allowExtraJsonFields && this.fields.length == 0) return;
-
+        // loop through the defined fields
         for (var i = 0; i < this.fields.length; ++i) {
             var currentField: IField = <IField>_.defaultsDeep(this.fields[i], defaultField);
+            // so we can back track when we check for extra JSON fields
+            definedFields.push(currentField.fieldName);
+            // do the actual validation on the object's field
             var validationResults = Schema.validateField(currentField, object[currentField.fieldName]);
             if (validationResults.length > 0) {
-                object._validationResult.isValid = false;
-                object._validationResult[currentField.fieldName] = validationResults;
+                result.isValid = false;
+                result[currentField.fieldName] = validationResults;
             }
         }
+
+        if (!this.allowExtraJsonFields) {
+            for (var fn in object) {
+                //noinspection JSUnfilteredForInLoop
+                if (fn.substring(0, 1) !== '_' && !_.includes(definedFields, fn)) {
+                    result.isValid = false;
+                    //noinspection JSUnfilteredForInLoop
+                    result[fn] = ['Extraneous field ' + fn + ' is not defined by the schema']
+                }
+            }
+        }
+
+        // attach the validation result
+        object._validationResult = result;
     }
 
     public j2m(json: any): utils.IMongoObject | utils.IMongoObject[] {
