@@ -10,14 +10,20 @@ interface IValidatorOptions {
     allowNull: boolean;
 }
 
-export interface IIntValidatorOptions extends IValidatorOptions {
+interface IAnyValidatorOptions extends IValidatorOptions {
+    defaultValue?: any;
+}
+
+interface IIntValidatorOptions extends IValidatorOptions {
+    defaultValue?: number;
     max?: number;
     min?: number;
     floorMax?: boolean;
     ceilMin?: boolean;
 }
 
-export interface IStringValidatorOptions extends IValidatorOptions {
+interface IStringValidatorOptions extends IValidatorOptions {
+    defaultValue?: string;
     maxLength: number;
     minLength: number;
     allowEmpty: boolean;
@@ -30,23 +36,27 @@ export interface IStringValidatorOptions extends IValidatorOptions {
 
 class AnyValidator implements IValidator {
 
-    private _options: IValidatorOptions = {
-        allowNull: false
+    private _options: IAnyValidatorOptions = {
+        defaultValue: null,
+        allowNull: true
     };
 
-    constructor(options?: IValidatorOptions) {
+    constructor(options?: IAnyValidatorOptions) {
         _.assignIn(this._options, options || {});
     }
 
     validate(value: any): boolean {
-        return (value !== undefined && (this._options.allowNull || value != null));
+        // undefined values get caught at the object level, not the field level
+        return this._options.allowNull || (value != null);
     }
 
     convert(value: any): any {
         if (_.isNil(value)) {
-            if (this._options.allowNull)
+            if (this._options.allowNull) {
                 return null;
-            throw 'Can\'t convert null or undefined any() type to a non-null value.'
+            } else {
+                return this._options.defaultValue;
+            }
         }
         return value;
     }
@@ -55,6 +65,7 @@ class AnyValidator implements IValidator {
 class IntValidator implements IValidator {
 
     private _options: IIntValidatorOptions = {
+        defaultValue: 0,
         allowNull: false,
         max: null,
         min: null,
@@ -72,11 +83,17 @@ class IntValidator implements IValidator {
             var minValid = (_.isNil(this._options.min) || (this._options.min <= value));
             return maxValid && minValid;
         }
-        return (this._options.allowNull && value == null);
+        return this._options.allowNull || (value != null);
     }
 
-    convert(value: any): any {
-        if (_.isNil(value) && this._options.allowNull) return null;
+    convert(value: any): number {
+        if (_.isNil(value)) {
+            if (this._options.allowNull) {
+                return null;
+            } else {
+                return this._options.defaultValue;
+            }
+        }
         var result = _.toSafeInteger(value); // will return 0 for null/undef
         if (this._options.floorMax && !_.isNil(this._options.max))
             result = Math.min(this._options.max, value);
@@ -89,6 +106,7 @@ class IntValidator implements IValidator {
 class StringValidator implements IValidator {
 
     private _options: IStringValidatorOptions = {
+        defaultValue: '',
         allowNull: false,
         maxLength: null,
         minLength: null,
@@ -107,20 +125,32 @@ class StringValidator implements IValidator {
     validate(value: any): boolean {
         var maxValid = true;
         var minValid = true;
-        if (_.isString(value)) {
+        var newValue = value;
+        if (value == null && !this._options.allowNull) {
+            newValue = this._options.defaultValue;
+        }
+        if (_.isString(newValue)) {
             if (!_.isNil(this._options.maxLength)) {
-                maxValid = (this._options.maxLength >= value.length);
+                maxValid = (this._options.maxLength >= newValue.length);
             }
             if (!_.isNil(this._options.minLength)) {
-                minValid = (this._options.minLength <= value.length) || (value.length == 0 && this._options.allowEmpty);
+                minValid = (this._options.minLength <= newValue.length) || (newValue.length == 0 && this._options.allowEmpty);
             }
             return maxValid && minValid;
         }
-        return (!!this._options.allowNull && (value == null));
+
+        return false;
     }
 
     convert(value: any): any {
-        if (_.isNil(value) && this._options.allowNull) return null;
+        // convert always assumes that validation has passed, i.e. defaultValue doesn't break anything
+        if (_.isNil(value)) {
+            if (this._options.allowNull) {
+                return null;
+            } else {
+                return this._options.defaultValue;
+            }
+        }
         var result = _.toString(value); // will return '' for null/undef
         if (!_.isNil(this._options.maxLength) && this._options.trimToMax) {
             var loOpts = {
@@ -143,7 +173,7 @@ class StringValidator implements IValidator {
 }
 
 export class factory {
-    static any(allowNull: boolean): IValidator {
+    static any(allowNull: boolean = true): IValidator {
         return new AnyValidator({allowNull: allowNull});
     }
 
