@@ -1,9 +1,9 @@
 ///<reference path="ref.d.ts"/>
 import * as _ from 'lodash';
 import * as Promise from 'bluebird';
-import * as Schema from "./schema";
-import {IQuery} from "./queryBuilder";
-import {IMongoObject, getIdFromString} from "./util";
+import * as Schema from './schema';
+import {IQuery} from './queryBuilder';
+import {IMongoObject, getIdFromString} from './util';
 
 export interface IRepositoryPromise<T> extends PromiseLike<T> {
     catch(onReject?: (error: any) => T | PromiseLike<T> | void | PromiseLike<void>): IRepositoryPromise<T>;
