@@ -63,7 +63,7 @@ class Schema implements ISchema {
         }
 
         object._validationResult = {
-            _isValid: true
+            isValid: true
         };
 
         if (!this.allowExtraJsonFields && this.fields.length == 0) return;
@@ -72,7 +72,7 @@ class Schema implements ISchema {
             var currentField: IField = <IField>_.defaultsDeep(this.fields[i], defaultField);
             var validationResults = Schema.validateField(currentField, object[currentField.fieldName]);
             if (validationResults.length > 0) {
-                object._validationResult._isValid = false;
+                object._validationResult.isValid = false;
                 object._validationResult[currentField.fieldName] = validationResults;
             }
         }
@@ -85,7 +85,7 @@ class Schema implements ISchema {
             for (var i = 0; i < json.length; ++i) {
                 var current = json[i];
                 this.validate(current);
-                if (current._validationResult._isValid) {
+                if (current._validationResult.isValid) {
                     bson.push(Schema.convertJsonToBson(current));
                 } else {
                     bson.push(current);
@@ -93,7 +93,7 @@ class Schema implements ISchema {
             }
         } else {
             this.validate(json);
-            if (json._validationResult._isValid) {
+            if (json._validationResult.isValid) {
                 bson = Schema.convertJsonToBson(json);
             } else {
                 bson = json;
@@ -109,14 +109,14 @@ class Schema implements ISchema {
             for (var i = 0; i < bson.length; i++) {
                 let current = Schema.convertBsonToJson(bson[i]);
                 this.validate(current);
-                if (current._validationResult._isValid) {
+                if (current._validationResult.isValid) {
                     json.push(current);
                 }
             }
         } else {
             let current = Schema.convertBsonToJson(bson);
             this.validate(current);
-            if (current._validationResult._isValid) {
+            if (current._validationResult.isValid) {
                 json = current;
             }
         }
