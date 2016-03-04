@@ -1,4 +1,4 @@
-///<reference path="_all.d.ts"/>
+///<reference path="../_all.d.ts"/>
 import * as validators from './validators';
 import * as utils from './util';
 import * as _ from 'lodash';
