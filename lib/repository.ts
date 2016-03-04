@@ -5,17 +5,12 @@ import * as Schema from './schema';
 import {IQuery} from './queryBuilder';
 import {IMongoObject, getIdFromString} from './util';
 
-export interface IRepositoryPromise<T> extends PromiseLike<T> {
-    catch(onReject?: (error: any) => T | PromiseLike<T> | void | PromiseLike<void>): IRepositoryPromise<T>;
-    finally<TResult>(handler: () => TResult | PromiseLike<TResult>): IRepositoryPromise<T>;
-}
-
 export interface IRepository {
-    getAll(): IRepositoryPromise<any[]>;
-    get(id: string): IRepositoryPromise<any>;
-    query(query: IQuery): IRepositoryPromise<any[]>;
-    save(item: any): IRepositoryPromise<any>
-    delete(id: string): IRepositoryPromise<void>;
+    getAll(): Promise<any[]>;
+    get(id: string): Promise<any>;
+    query(query: IQuery): Promise<any[]>;
+    save(item: any): Promise<any>;
+    delete(id: string): Promise<void>;
     clear(): void;
 }
 
@@ -36,24 +31,24 @@ class Repository implements IRepository {
             findOne: Promise.promisify(this._dbCollection.findOne, contextOpts),
             save: Promise.promisify(this._dbCollection.save, contextOpts),
             remove: Promise.promisify(this._dbCollection.remove, contextOpts)
-        }
+        };
     }
 
-    public getAll(): IRepositoryPromise<any[]> {
+    public getAll(): Promise<any[]> {
         return this._promiseApi.find({}).then((doc: any) => this._schema.m2j(doc));
     }
 
-    public get(id: string): IRepositoryPromise<any> {
+    public get(id: string): Promise<any> {
         return this._promiseApi
             .findOne({ _id: getIdFromString(id) })
             .then((doc: any) => this._schema.m2j(doc));
     }
 
-    public query(query: IQuery): IRepositoryPromise<any[]> {
+    public query(query: IQuery): Promise<any[]> {
         return this._promiseApi.find(query.encode()).then((doc: any) => this._schema.m2j(doc));
     }
 
-    public save(item: any): IRepositoryPromise<any> {
+    public save(item: any): Promise<any> {
         // assume that item is singular
         var result = this._schema.j2m(item);
         var validResult: any;
@@ -77,7 +72,8 @@ class Repository implements IRepository {
         }
     }
 
-    public delete(id: string): IRepositoryPromise<any> {
+    //noinspection ReservedWordAsName
+    public delete(id: string): Promise<any> {
         return undefined;
     }
 

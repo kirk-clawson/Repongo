@@ -4,5 +4,4 @@
 ///<reference path="lib/schema.ts"/>
 ///<reference path="lib/util.ts"/>
 ///<reference path="lib/validators.ts"/>
-
-
+///<reference path="index.ts"/>

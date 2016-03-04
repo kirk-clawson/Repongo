@@ -1,7 +1,6 @@
 ### Repongo specific
 *.js.map
 *.js
-!test/*.js
 /typings
 
 ### Node template
