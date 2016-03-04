@@ -177,11 +177,11 @@ export class factory {
         return new AnyValidator({allowNull: allowNull});
     }
 
-    static int(options: IIntValidatorOptions): IValidator {
+    static int(options?: IIntValidatorOptions): IValidator {
         return new IntValidator(options);
     }
 
-    static string(options: IStringValidatorOptions): IValidator {
+    static string(options?: IStringValidatorOptions): IValidator {
         return new StringValidator(options);
     }
 }
