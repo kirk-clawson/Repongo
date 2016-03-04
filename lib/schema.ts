@@ -1,40 +1,19 @@
 ///<reference path="../_all.d.ts"/>
-import * as validators from './validators';
-import * as utils from './util';
 import * as _ from 'lodash';
 
-interface IField {
-    fieldName: string;
-    isRequired?: boolean;
-    requiredMessage?: string;
-    typeValidator?: validators.IValidator;
-    typeMessage?: string;
-    customValidator?: (value: any) => string | string[];
-}
-
-export interface ISchemaOptions {
+interface ISchemaOptions {
     catalogName: string;
     allowExtraJsonFields?: boolean;
     fields?: IField[];
 }
 
-export interface ISchema {
+interface ISchema {
     catalogName: string;
-    validate(object: any): void;
-    j2m(json: any): utils.IMongoObject | utils.IMongoObject[];
-    m2j(bson: utils.IMongoObject | utils.IMongoObject[]): any;
+    validate: (object: any) => void;
+    j2m: (json: any) => IMongoObject | IMongoObject[];
+    m2j: (bson: IMongoObject | IMongoObject[]) => any;
+    add: (field: IField) => void;
 }
-
-var defaultField: IField = {
-    fieldName: null,
-    isRequired: false,
-    requiredMessage: ':? is required',
-    typeValidator: validators.factory.any(true),
-    typeMessage: ':? is the wrong data type',
-    customValidator: function () {
-        return null;
-    }
-};
 
 var defaultOptions: ISchemaOptions = {
     catalogName: null,
@@ -52,6 +31,11 @@ class Schema implements ISchema {
         this.catalogName = init.catalogName;
         this.allowExtraJsonFields = init.allowExtraJsonFields;
         this.fields = _.map(init.fields, _.cloneDeep);
+    }
+
+    public add(field: IField): void {
+        if (_.isNil(field)) throw 'Cannot add a null or undefined to the field definitions';
+        this.fields.push(field);
     }
 
     public validate(object: any): void {
@@ -92,7 +76,7 @@ class Schema implements ISchema {
         object._validationResult = result;
     }
 
-    public j2m(json: any): utils.IMongoObject | utils.IMongoObject[] {
+    public j2m(json: any): IMongoObject | IMongoObject[] {
         var bson: any = null;
         if (_.isArray(json)) {
             bson = [];
@@ -116,7 +100,7 @@ class Schema implements ISchema {
         return bson;
     }
 
-    public m2j(bson: utils.IMongoObject | utils.IMongoObject[]): any {
+    public m2j(bson: IMongoObject | IMongoObject[]): any {
         var json: any = null;
         if (_.isArray(bson)) {
             json = [];
@@ -159,33 +143,30 @@ class Schema implements ISchema {
         return result;
     }
 
-    private static convertJsonToBson(validatedJson: any): utils.IMongoObject {
+    private static convertJsonToBson(validatedJson: any): IMongoObject {
         var result = validatedJson;
         // validation check is done before we get here
         if (validatedJson._id && _.isString(validatedJson._id) && validatedJson._id != '') {
-            validatedJson._id = utils.getIdFromString(validatedJson._id); //convert _id from string to mongo id object
+            validatedJson._id = getIdFromString(validatedJson._id); //convert _id from string to mongo id object
         }
         // TODO: data type conversion
         return result;
     }
 
-    private static convertBsonToJson(bson: utils.IMongoObject): any {
+    private static convertBsonToJson(bson: IMongoObject): any {
         // assumes bson object will always have an _id property, which will always be true with a doc returned from mongo
         var json = bson;
         json._id = bson._id.toString(); // convert mongo id object to string
         return json;
     }
-}
 
-export function create(init: string | ISchemaOptions): ISchema {
-    var opts: ISchemaOptions;
-    if (_.isString(init)) {
-        opts = <ISchemaOptions>_.defaultsDeep({catalogName: init}, defaultOptions);
-    } else {
-        opts = <ISchemaOptions>_.defaultsDeep(init, defaultOptions);
+    public static create(catalogName: string): ISchema;
+    public static create(catalogName: string, allowExtraFields?: boolean): ISchema {
+        var params = {
+            catalogName: catalogName,
+            allowExtraJsonFields : (allowExtraFields === null ? undefined : allowExtraFields)
+        };
+        var opts = <ISchemaOptions>_.defaultsDeep(params, defaultOptions);
+        return new Schema(opts);
     }
-    if (_.isNil(opts.catalogName) || opts.catalogName === '') {
-        throw 'Cannot create a Schema instance with an empty catalog name.'
-    }
-    return new Schema(opts);
 }

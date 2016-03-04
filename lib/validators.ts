@@ -1,37 +1,9 @@
 ///<reference path="../_all.d.ts"/>
 import * as _ from 'lodash';
 
-export interface IValidator {
+interface IValidator {
     validate(value: any): boolean;
     convert(value: any): any;
-}
-
-interface IValidatorOptions {
-    allowNull: boolean;
-}
-
-interface IAnyValidatorOptions extends IValidatorOptions {
-    defaultValue?: any;
-}
-
-interface IIntValidatorOptions extends IValidatorOptions {
-    defaultValue?: number;
-    max?: number;
-    min?: number;
-    floorMax?: boolean;
-    ceilMin?: boolean;
-}
-
-interface IStringValidatorOptions extends IValidatorOptions {
-    defaultValue?: string;
-    maxLength: number;
-    minLength: number;
-    allowEmpty: boolean;
-    trimToMax: boolean;
-    padToMin: boolean;
-    continuationChar: string;
-    padChar: string;
-    padAtEnd: boolean;
 }
 
 class AnyValidator implements IValidator {
@@ -172,7 +144,7 @@ class StringValidator implements IValidator {
     }
 }
 
-export class factory {
+class factory {
     static any(allowNull: boolean = true): IValidator {
         return new AnyValidator({allowNull: allowNull});
     }
