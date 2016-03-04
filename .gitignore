@@ -2,6 +2,7 @@
 *.js.map
 *.js
 !test/*.js
+/typings
 
 ### Node template
 # Logs

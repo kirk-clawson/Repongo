@@ -1,4 +1,4 @@
-///<reference path="lib/ref.d.ts"/>
+///<reference path="lib/_all.d.ts"/>
 var mongo = require('mongojs');
 
 import * as _ from 'lodash';
