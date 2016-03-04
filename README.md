@@ -14,13 +14,15 @@ npm install repongo
 Examples for simple repository actions:
 ```JavaScript
 // connecting to a server
-// the connection string format is documented at the above link
-var db = require('repongo')('mongodb://localhost/my_database');
+var repongo = require('repongo');
+
+// the connection string format is documented at the mongodb.org link above
+var db = new repongo.Connection('mongodb://localhost/my_database');
 
 // get an instance of an untyped repository for the catalog "cats"
 // if the repository exists, this opens it; if not, this will create, then open it
 // this repository won't validate your objects against a schema
-var repo = db.createRepo('cats');
+var repo = db.createRepository('cats');
 
 // Insert data (or update if the object passed in already has an _id property)
 var pugglesId;
@@ -56,21 +58,21 @@ repo.delete(pugglesId)
 
 Examples of setting up a Schema:
 ```JavaScript
-var db = require('repongo')('mongodb://localhost/my_database');
+var repongo = require('repongo');
+var db = new repongo.Connection('mongodb://localhost/my_database');
 
-var catFields = {
-    name: { required: true },
-    age: { type: db.types.int }
+var catFields = [
+    { fieldName: 'name', isRequired: true },                        // name is required
+    { fieldName: 'age', typeValidator: repongo.validators.int() }   // age is an integer
+];
+
+var schemaOptions = {
+    catalogName: 'cats',
+    fields: catFields
 };
 
-var schemaOpts = {
-    catalog: 'cats',
-    fields: catFields,
-    keepExtraFields: true
-};
-
-var catSchema = db.createSchema(schemaOpts);
-var repo = db.createRepo(catSchema);
+var catSchema = db.schemaFactory(schemaOptions);
+var repo = db.createRepository(catSchema);
 
 var badCat = { age: 'xyz' };
 repo.save(badCat)
