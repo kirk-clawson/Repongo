@@ -28,7 +28,7 @@ var repo = db.createRepository('cats');
 var pugglesId;
 repo.save({name: 'Mr. Puggles', age: 6})
     .then(function (result) {
-        console.log(result); // returns object after saving, including an _id property with the Mongo PK
+        console.log(result); // 'result' is the saved object with the Mongo PK stored in _id
         pugglesId = result._id;
     })
     .catch(function (err) {
@@ -78,8 +78,8 @@ var badCat = { age: 'xyz' };
 repo.save(badCat)
     .catch(function (err) {
         console.log(err.message);
-        console.log(err.data); // returns your object as-is with one additional property called _validationResult  
-                               // it will contain the validation errors for the missing name field and the invalid
-                               // age data type
+        console.log(err.data); // returns your object as-is with one additional property called 
+                               // _validationResult, which will contain the validation errors 
+                               // for the missing name field and the invalid age data type
     });
 ```
