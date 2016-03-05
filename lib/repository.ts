@@ -1,9 +1,11 @@
 ///<reference path="../_all.d.ts"/>
+
 import * as _ from 'lodash';
 import * as Promise from 'bluebird';
-import * as Schema from './schema';
+import {ISchema} from './schema';
 import {IQuery} from './queryBuilder';
-import {IMongoObject, getIdFromString} from './util';
+import {SchemaFactory} from './schema';
+
 
 export interface IRepository {
     getAll(): Promise<any[]>;
@@ -16,10 +18,10 @@ export interface IRepository {
 
 class Repository implements IRepository {
     private _promiseApi: any;
-    private _schema: Schema.ISchema;
+    private _schema: ISchema;
     private _dbCollection: any;
 
-    constructor(schema: Schema.ISchema, db:any) {
+    constructor(schema: ISchema, db: any) {
         this._schema = schema;
         this._dbCollection = db.collection(this._schema.catalogName);
 
@@ -40,7 +42,7 @@ class Repository implements IRepository {
 
     public get(id: string): Promise<any> {
         return this._promiseApi
-            .findOne({ _id: getIdFromString(id) })
+            .findOne({_id: getIdFromString(id)})
             .then((doc: any) => this._schema.m2j(doc));
     }
 
@@ -54,8 +56,8 @@ class Repository implements IRepository {
         var validResult: any;
         if (_.isArray(result)) {
             validResult = [];
-            for (var i = 0; i < result.length; ++i){
-                if(result[i] && result[i]._validationResult && result[i]._validationResult.isValid) {
+            for (var i = 0; i < result.length; ++i) {
+                if (result[i] && result[i]._validationResult && result[i]._validationResult.isValid) {
                     delete result[i]._validationResult; // don't want to persist this field in the DB
                     validResult.push(result);
                 }
@@ -65,9 +67,9 @@ class Repository implements IRepository {
             validResult = <IMongoObject>result;
             if (validResult && validResult._validationResult && validResult._validationResult.isValid) {
                 delete validResult._validationResult; // don't want to persist this field in the DB
-                return this._promiseApi.save(validResult).then((doc:any) => this._schema.m2j(doc));
+                return this._promiseApi.save(validResult).then((doc: any) => this._schema.m2j(doc));
             } else {
-                return Promise.reject({ message: 'Item failed schema validation check.', data: result});
+                return Promise.reject({message: 'Item failed schema validation check.', data: result});
             }
         }
     }
@@ -82,11 +84,13 @@ class Repository implements IRepository {
     }
 }
 
-export function create(schema: string | Schema.ISchema, db: any) : IRepository {
-    if (_.isString(schema)) {
-        var tempSchema = Schema.create(schema);
-        return new Repository(tempSchema, db);
-    } else {
-        return new Repository(schema, db);
+export class RepositoryFactory {
+    public static create(schema: string | ISchema, db: any): IRepository {
+        if (_.isString(schema)) {
+            var tempSchema = SchemaFactory.create(schema, true);
+            return new Repository(tempSchema, db);
+        } else {
+            return new Repository(schema, db);
+        }
     }
 }

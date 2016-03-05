@@ -1,123 +1,225 @@
 ///<reference path="../_all.d.ts"/>
 
+import * as _ from 'lodash';
+
+// ----------------------------------------
+// base interfaces
+export interface IField {
+    name: string;
+    defaultValue: any;
+    messages: string[];
+    isValid(value: any): boolean;
+}
+
+export interface IFluent {
+    getField(): IField;
+}
+
+interface IFluentValidator<TDerived> extends IFluent {
+    isRequired(message?: string): TDerived
+}
+
 class FieldRule<TRuleType> {
-    constructor(public value: TRuleType, public message: string){}
-}
-
-interface IField<TFieldType> {
-    name: string;
-    defaultValue: TFieldType;
-    fieldIsRequired: FieldRule<boolean>;
-    allowNull: FieldRule<boolean>;
-    customValidator: (value: any) => string[];
-}
-
-interface IAnyField extends IField<any> {
-}
-
-interface IIntField extends IField<number> {
-    max: FieldRule<number>;
-    min: FieldRule<number>;
-    floorMax: boolean;
-    ceilMin: boolean;
-}
-
-interface IStringField extends IField<string> {
-    maxLength: FieldRule<number>;
-    minLength: FieldRule<number>;
-    trimToMax: boolean;
-    padToMin: boolean;
-    continuationChar: string;
-    padChar: string;
-    padAtEnd: boolean;
-}
-
-interface IFluent<TDerived> {
-    isRequired: (message?: string) => TDerived
-    allowsNull: (message?: string) => TDerived;
-    defaultsTo: (value: any) => TDerived;
-}
-
-interface IAnyFluent extends IFluent<IAnyFluent> {
-    getField: () => IAnyField;
-}
-
-interface IIntFluent extends IFluent<IIntFluent> {
-    maxValue: (value: number, floorOnConvert?: boolean, message?: string) => IIntFluent;
-    minValue: (value: number, ceilingOnConvert?: boolean, message?: string) => IIntFluent;
-    getField: () => IIntField;
-}
-
-interface IStringFluent extends IFluent<IStringFluent> {
-    maxLength: (value: number, trimOnConvert?: boolean, continuationChar?: string, message?: string) => IStringFluent;
-    minLength: (value: number, padOnConvert?: boolean, padChar?: string, padDirection?: 'start'|'end', message?: string) => IStringFluent;
-    getField: () => IStringField;
-}
-
-class BaseImpl<TFieldType> implements IField<TFieldType> {
-
-    name: string;
-    defaultValue: TFieldType;
-    fieldIsRequired: FieldRule<boolean>;
-    allowNull: FieldRule<boolean>;
-
-    constructor(name: string){
-        this.name = name;
-        this.defaultValue = null;
-        this.fieldIsRequired = new FieldRule<boolean>(false, '?: is a required field');
-        this.allowNull = new FieldRule<boolean>(false, '?: cannot be null');
+    constructor(public value: TRuleType, public message: string) {
     }
 
-    customValidator(value: any): string[] {
-        return [];
+    setNonNullMessage(message?: string): void {
+        if (!_.isNil(message)) {
+            this.message = message;
+        }
     }
 }
 
-class AnyImpl implements IAnyField, IAnyFluent {
+function stringFormat(message: string, ...substitutions: any[]): string {
+    let result = message;
+    for (let i = 0; i < substitutions.length; ++i) {
+        let token = ':' + i + '?';
+        result = _.replace(result, token, substitutions[i])
+    }
+    return result;
+}
+
+// ---------------------------------------------
+// any type field interfaces and implementations
+export interface IAnyFluent extends IFluentValidator<IAnyFluent> {
+}
+
+class AnyImpl implements IField, IAnyFluent {
     name: string;
     defaultValue: any;
     fieldIsRequired: FieldRule<boolean>;
-    allowNull: FieldRule<boolean>;
+    messages: string[];
 
-    constructor(name: string){
+    constructor(name: string, defaultValue: any) {
         this.name = name;
-        this.defaultValue = null;
-        this.fieldIsRequired = new FieldRule<boolean>(false, '?: is a required field');
-        this.allowNull = new FieldRule<boolean>(false, '?: cannot be null');
+        this.defaultValue = defaultValue;
+        this.fieldIsRequired = new FieldRule<boolean>(false, '?0: is a required field');
+        this.messages = [];
     }
 
-    customValidator(value: any): string[] {
-        return [];
+    isValid(value: any): boolean {
+        let result = true;
+        if (this.fieldIsRequired.value && _.isNil(value)) {
+            this.messages.push(stringFormat(this.fieldIsRequired.message, this.name));
+            result = false;
+        }
+        return result;
     }
 
-    getField(): IAnyField {
+    getField(): IField {
         return this;
     }
 
+    isRequired(): IAnyFluent;
+    isRequired(message: string): IAnyFluent
     isRequired(message?: string): IAnyFluent {
         this.fieldIsRequired.value = true;
-        if (!_.isNil(message)) {
-            this.fieldIsRequired.message = message;
-        }
-        return this;
-    }
-
-    allowsNull(message?: string): IAnyFluent {
-        this.allowNull.value = true;
-        if (!_.isNil(message)) {
-            this.allowNull.message = message;
-        }
-        return this;
-    }
-
-    defaultsTo(value: any): IAnyFluent {
-        this.defaultValue = value;
+        this.fieldIsRequired.setNonNullMessage(message);
         return this;
     }
 }
 
-class field {
-    public static any(name: string): IAnyFluent {
-        return new AnyImpl(name);
+// --------------------------------------------------
+// int type field interfaces and implementation
+export interface IIntFluent extends IFluentValidator<IIntFluent> {
+    hasMaximumOf(value: number, message?: string): IIntFluent;
+    hasMinimumOf(value: number, message?: string): IIntFluent;
+}
+
+class IntImpl extends AnyImpl implements IField, IIntFluent {
+    max: FieldRule<number>;
+    min: FieldRule<number>;
+    dataTypeMessage: string;
+
+    constructor(name: string);
+    constructor(name: string, defaultValue: number);
+    constructor(name: string, defaultValue: number, message: string);
+    constructor(name: string, defaultValue?: number, message?: string) {
+        super(name, (_.isNil(defaultValue) ? 0 : defaultValue));
+        this.max = new FieldRule<number>(null, '?0: value of ?1: exceeds the maximum value of ?2:');
+        this.min = new FieldRule<number>(null, '?0: value of ?1: is less than the minimum value of ?2:');
+        if (!_.isNil(message)){
+            this.dataTypeMessage = message;
+        } else {
+            this.dataTypeMessage = '?0: does not match the specified data type (Integer)';
+        }
+    }
+
+    isValid(value: any): boolean {
+        let result = super.isValid(value);
+        if (!_.isInteger(value)) {
+            this.messages.push(stringFormat(this.dataTypeMessage, this.name));
+            return false;
+        }
+        if (value > this.max.value) {
+            this.messages.push(stringFormat(this.max.message, this.name, value, this.max.value));
+            result = false;
+        }
+        if (value < this.min.value) {
+            this.messages.push(stringFormat(this.min.message, this.name, value, this.min.value));
+            result = false;
+        }
+        return result;
+    }
+
+    isRequired(): IIntFluent;
+    isRequired(message: string): IIntFluent
+    isRequired(message?: string): IIntFluent {
+        super.isRequired(message);
+        return this;
+    }
+
+    hasMaximumOf(value: number): IIntFluent;
+    hasMaximumOf(value: number, message: string): IIntFluent;
+    hasMaximumOf(value: number, message?: string): IIntFluent {
+        this.max.value = value;
+        this.max.setNonNullMessage(message);
+        return this;
+    }
+
+    hasMinimumOf(value: number): IIntFluent;
+    hasMinimumOf(value: number, message: string): IIntFluent;
+    hasMinimumOf(value: number, message?: string): IIntFluent {
+        this.min.value = value;
+        this.min.setNonNullMessage(message);
+        return this;
+    }
+}
+
+// ----------------------------------------------
+// string type field interfaces and implementation
+export interface IStringFluent extends IFluentValidator<IStringFluent> {
+    hasMaxLengthOf: (value: number, message?: string) => IStringFluent;
+    hasMinLengthOf: (value: number, message?: string) => IStringFluent;
+}
+
+class StringImpl extends AnyImpl implements IField, IStringFluent {
+    maxLength: FieldRule<number>;
+    minLength: FieldRule<number>;
+    dataTypeMessage: string;
+
+    constructor(name: string, defaultValue?: string, message?: string) {
+        super(name, (_.isNil(defaultValue) ? '' : defaultValue));
+        this.maxLength = new FieldRule<number>(null, '?0: exceeds the maximum length of ?1:');
+        this.minLength = new FieldRule<number>(null, '?0: is shorter than the minimum length of ?1:');
+        if (!_.isNil(message)){
+            this.dataTypeMessage = message;
+        } else {
+            this.dataTypeMessage = '?0: does not match the specified data type (String)';
+        }
+    }
+
+    isValid(value: any): boolean {
+        var result = super.isValid(value);
+        if (!_.isString(value)) {
+            this.messages.push(stringFormat(this.dataTypeMessage, this.name));
+            return false;
+        }
+        if (value.length > this.maxLength.value) {
+            this.messages.push(stringFormat(this.maxLength.message, this.name, this.maxLength.value));
+            result = false;
+        }
+        if (value.length < this.minLength.value) {
+            this.messages.push(stringFormat(this.minLength.message, this.name, this.minLength.value));
+            result = false;
+        }
+        return result;
+    }
+
+    isRequired(): IStringFluent;
+    isRequired(message: string): IStringFluent
+    isRequired(message?: string): IStringFluent {
+        super.isRequired(message);
+        return this;
+    }
+
+    hasMaxLengthOf(value: number): IStringFluent;
+    hasMaxLengthOf(value: number, message: string): IStringFluent;
+    hasMaxLengthOf(value: number, message?: string): IStringFluent {
+        this.maxLength.value = value;
+        this.maxLength.setNonNullMessage(message);
+        return this;
+    }
+
+    hasMinLengthOf(value: number): IStringFluent;
+    hasMinLengthOf(value: number, message: string): IStringFluent;
+    hasMinLengthOf(value: number, message?: string): IStringFluent {
+        this.maxLength.value = value;
+        this.maxLength.setNonNullMessage(message);
+        return this;
+    }
+}
+
+export class FieldFactory {
+    public static any(name: string, defaultValue: any): IAnyFluent {
+        return new AnyImpl(name, defaultValue);
+    }
+
+    public static int(name: string, defaultValue?: number, typeValidationMessage?: string): IIntFluent {
+        return new IntImpl(name, defaultValue, typeValidationMessage);
+    }
+
+    public static string(name: string, defaultValue?: string, typeValidationMessage?: string): IStringFluent {
+        return new StringImpl(name, defaultValue, typeValidationMessage);
     }
 }

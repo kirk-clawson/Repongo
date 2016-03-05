@@ -1,41 +1,45 @@
 ///<reference path="../_all.d.ts"/>
+
 import * as _ from 'lodash';
+import {IField, IFluent} from './fields';
 
-interface ISchemaOptions {
+export interface ISchema {
     catalogName: string;
-    allowExtraJsonFields?: boolean;
-    fields?: IField[];
+    validate(object: any): void;
+    j2m(json: any): IMongoObject | IMongoObject[];
+    m2j(bson: IMongoObject | IMongoObject[]): any;
+    addField(fieldDefinition: IFluent): void;
+    addModel(model: any): void;
 }
-
-interface ISchema {
-    catalogName: string;
-    validate: (object: any) => void;
-    j2m: (json: any) => IMongoObject | IMongoObject[];
-    m2j: (bson: IMongoObject | IMongoObject[]) => any;
-    add: (field: IField) => void;
-}
-
-var defaultOptions: ISchemaOptions = {
-    catalogName: null,
-    allowExtraJsonFields: true,
-    fields: []
-};
-
 
 class Schema implements ISchema {
     public catalogName: string;
     private allowExtraJsonFields: boolean;
     private fields: IField[];
 
-    constructor(init: ISchemaOptions) {
-        this.catalogName = init.catalogName;
-        this.allowExtraJsonFields = init.allowExtraJsonFields;
-        this.fields = _.map(init.fields, _.cloneDeep);
+    constructor(catalogName: string, allowExtraJsonFields?: boolean) {
+        this.catalogName = catalogName;
+        this.allowExtraJsonFields = allowExtraJsonFields;
+        this.fields = [];
     }
 
-    public add(field: IField): void {
-        if (_.isNil(field)) throw 'Cannot add a null or undefined to the field definitions';
-        this.fields.push(field);
+    public addField(fieldDefinition: IFluent): void {
+        if (_.isNil(fieldDefinition)) throw 'Cannot add a null or undefined field to the schema';
+        this.fields.push(fieldDefinition.getField());
+    }
+
+    public addModel(model: any): void {
+        if (_.isNil(model)) throw 'Cannot add a null or undefined model to the schema';
+        for (var field in model) {
+            if (model.hasOwnProperty(field)) {
+                let prop: IFluent = model[field];
+                if (prop.getField !== undefined && typeof prop.getField === 'function') {
+                    let fieldActual: IField = prop.getField();
+                    fieldActual.name = field;
+                    this.fields.push(fieldActual);
+                }
+            }
+        }
     }
 
     public validate(object: any): void {
@@ -43,21 +47,21 @@ class Schema implements ISchema {
             throw 'Cannot validate null or undefined.';
         }
 
-        var result : any = {
-            isValid: true
+        var result: any = {
+            isValid: true,
         };
         var definedFields: string[] = [];
 
         // loop through the defined fields
         for (var i = 0; i < this.fields.length; ++i) {
-            var currentField: IField = <IField>_.defaultsDeep(this.fields[i], defaultField);
+            var currentField: IField = this.fields[i];
             // so we can back track when we check for extra JSON fields
-            definedFields.push(currentField.fieldName);
+            definedFields.push(currentField.name);
             // do the actual validation on the object's field
-            var validationResults = Schema.validateField(currentField, object[currentField.fieldName]);
-            if (validationResults.length > 0) {
+            if (!currentField.isValid(object[currentField.name])) {
+                result[currentField.name] = currentField.messages.concat([]);
                 result.isValid = false;
-                result[currentField.fieldName] = validationResults;
+                currentField.messages.length = 0;
             }
         }
 
@@ -121,28 +125,6 @@ class Schema implements ISchema {
         return json;
     }
 
-    private static validateField(field: IField, fieldValue: any): string[] {
-        var result: string[] = [];
-        // Required validation
-        if (field.isRequired && (fieldValue == null || fieldValue == undefined)) {
-            result.push(_.replace(field.requiredMessage, ':?', field.fieldName));
-        }
-        // data type validation
-        if (field.typeValidator && !field.typeValidator.validate(fieldValue)) {
-            result.push(_.replace(field.typeMessage, ':?', field.fieldName));
-        }
-        // custom validator
-        if (field.customValidator && typeof field.customValidator === 'function') {
-            var customResult: string|string[] = field.customValidator(fieldValue);
-            if (_.isArray(customResult)) {
-                Array.prototype.push.apply(result, customResult);
-            } else if (customResult && _.isString(customResult) && customResult != '') {
-                result.push(customResult);
-            }
-        }
-        return result;
-    }
-
     private static convertJsonToBson(validatedJson: any): IMongoObject {
         var result = validatedJson;
         // validation check is done before we get here
@@ -159,14 +141,12 @@ class Schema implements ISchema {
         json._id = bson._id.toString(); // convert mongo id object to string
         return json;
     }
+}
 
+export class SchemaFactory {
     public static create(catalogName: string): ISchema;
+    public static create(catalogName: string, allowExtraFields: boolean): ISchema;
     public static create(catalogName: string, allowExtraFields?: boolean): ISchema {
-        var params = {
-            catalogName: catalogName,
-            allowExtraJsonFields : (allowExtraFields === null ? undefined : allowExtraFields)
-        };
-        var opts = <ISchemaOptions>_.defaultsDeep(params, defaultOptions);
-        return new Schema(opts);
+        return new Schema(catalogName, allowExtraFields);
     }
 }

@@ -1,22 +1,16 @@
 ///<reference path="../_all.d.ts"/>
-import * as repongo from '../index';
+import {Connection as Repongo, Fields} from '../index';
 import * as should from 'should';
 
 describe('With an empty Repository,', () => {
 
-    var db = new repongo.Connection('mongodb://localhost/my_database');
+    var db = new Repongo('mongodb://localhost/my_database');
 
     describe('And a defined schema', () => {
-        var catFields = [
-            {fieldName: 'name', isRequired: true},
-            {fieldName: 'age', typeValidator: repongo.validators.int()}
-        ];
-        var schemaOptions = {
-            catalogName: 'cats',
-            fields: catFields
-        };
+        let catSchema = Repongo.createSchema('cats');
+        catSchema.addField(Fields.string('name').isRequired());
+        catSchema.addField(Fields.int('age'));
 
-        var catSchema = repongo.schemaFactory(schemaOptions);
         var repoUnderTest = db.createRepository(catSchema);
 
         beforeEach(() => {

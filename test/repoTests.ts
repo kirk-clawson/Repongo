@@ -1,10 +1,10 @@
 ///<reference path="../_all.d.ts"/>
-import * as repongo from '../index';
+import {Connection} from '../index';
 import * as should from 'should';
 
 describe('With an empty Repository,', () => {
 
-    var db = new repongo.Connection('mongodb://localhost/repongo_test');
+    var db = new Connection('mongodb://localhost/repongo_test');
     var repoUnderTest = db.createRepository('cat');
 
     describe('when a cat is inserted', () => {
