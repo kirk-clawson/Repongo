@@ -3,6 +3,7 @@ A repository pattern implementation for MongoDB based on MongoJS. This project o
 - Repository pattern with simple data objects
 - Optional schema definition and validation in and out of the repository.
 - A query builder system to easily create custom queries
+- A fluent API to define fields on the schema
 
 Installation:
 ```
