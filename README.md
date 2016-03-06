@@ -15,7 +15,7 @@ npm install repongo
 Basic repository usage:
 ```JavaScript
 // connecting to a server
-// connection string format is documented at the mongodb.org (link above)
+// connection string format is documented at mongodb.org (link above)
 var repongo = require('repongo');
 var db = new repongo.Connection('mongodb://localhost/my_database');
 
@@ -45,9 +45,10 @@ var catModel = {
     name: repongo.fieldFactory.string().isRequired(),
     age: repongo.fieldFactory.int()
 };
+// add the model to the schema
+catSchema.addModel(catModel);
 // you can also add fields in an ad-hoc manner:
 catSchema.addField('ownerName', repongo.fieldFactory.string());
-
 
 var repo = db.createRepository(catSchema);
 
