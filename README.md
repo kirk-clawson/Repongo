@@ -15,9 +15,8 @@ npm install repongo
 Basic repository usage:
 ```JavaScript
 // connecting to a server
+// connection string format is documented at the mongodb.org (link above)
 var repongo = require('repongo');
-
-// the connection string format is documented at the mongodb.org link above
 var db = new repongo.Connection('mongodb://localhost/my_database');
 
 // get an instance of an untyped repository for the catalog "cats"
