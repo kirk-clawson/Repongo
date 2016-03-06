@@ -5,6 +5,8 @@ A repository pattern implementation for MongoDB based on MongoJS. This project o
 - A query builder system to easily create custom queries
 - A fluent API to define fields on the schema
 
+More information, examples, and API documentation can be found on the [Wiki site](https://github.com/kirk-clawson/Repongo/wiki).
+
 Installation:
 ```
 npm install repongo
@@ -12,7 +14,7 @@ npm install repongo
 
 [MongoDB connection string documentation](http://docs.mongodb.org/manual/reference/connection-string/)
 
-Basic repository usage:
+###Basic repository usage:
 ```JavaScript
 // connecting to a server
 // connection string format is documented at mongodb.org (link above)
@@ -33,7 +35,7 @@ repo.save({name: 'Mr. Puggles', age: 6})
     });
 ```
 
-Schema example:
+###Schema example:
 ```JavaScript
 var repongo = require('repongo');
 var db = new repongo.Connection('mongodb://localhost/my_database');
