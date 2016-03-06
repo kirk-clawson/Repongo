@@ -4,12 +4,12 @@ import * as should from 'should';
 
 describe('With an empty Repository,', () => {
 
-    var db = new Connection('mongodb://localhost/repongo_test');
-    var repoUnderTest = db.createRepository('cat');
+    const db = new Connection('mongodb://localhost/repongo_test');
+    const repoUnderTest = db.createRepository('cat');
 
     describe('when a cat is inserted', () => {
         it('Inserts one record that can be read back', (done: () => void) => {
-            var id: string;
+            let id: string;
             repoUnderTest.save({name: 'Mr. Puggles', age: 6})
                 .then((result: any) => {
                     should.exist(result);
