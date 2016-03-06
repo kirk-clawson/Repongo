@@ -12,7 +12,7 @@ export interface IField {
 }
 
 export interface IFluent {
-    getField(): IField;
+    getField(name: string): IField;
 }
 
 interface IFluentValidator<TDerived> extends IFluent {
@@ -50,8 +50,7 @@ class AnyImpl implements IField, IAnyFluent {
     fieldIsRequired: FieldRule<boolean>;
     messages: string[];
 
-    constructor(name: string, defaultValue: any) {
-        this.name = name;
+    constructor(defaultValue: any) {
         this.defaultValue = defaultValue;
         this.fieldIsRequired = new FieldRule<boolean>(false, '?0: is a required field');
         this.messages = [];
@@ -66,7 +65,8 @@ class AnyImpl implements IField, IAnyFluent {
         return result;
     }
 
-    getField(): IField {
+    getField(name: string): IField {
+        this.name = name;
         return this;
     }
 
@@ -91,11 +91,11 @@ class IntImpl extends AnyImpl implements IField, IIntFluent {
     min: FieldRule<number>;
     dataTypeMessage: string;
 
-    constructor(name: string);
-    constructor(name: string, defaultValue: number);
-    constructor(name: string, defaultValue: number, message: string);
-    constructor(name: string, defaultValue?: number, message?: string) {
-        super(name, (_.isNil(defaultValue) ? 0 : defaultValue));
+    constructor();
+    constructor(defaultValue: number);
+    constructor(defaultValue: number, message: string);
+    constructor(defaultValue?: number, message?: string) {
+        super(_.isNil(defaultValue) ? 0 : defaultValue);
         this.max = new FieldRule<number>(null, '?0: value of ?1: exceeds the maximum value of ?2:');
         this.min = new FieldRule<number>(null, '?0: value of ?1: is less than the minimum value of ?2:');
         if (!_.isNil(message)){
@@ -158,8 +158,11 @@ class StringImpl extends AnyImpl implements IField, IStringFluent {
     minLength: FieldRule<number>;
     dataTypeMessage: string;
 
-    constructor(name: string, defaultValue?: string, message?: string) {
-        super(name, (_.isNil(defaultValue) ? '' : defaultValue));
+    constructor();
+    constructor(defaultValue: string);
+    constructor(defaultValue: string, message: string);
+    constructor(defaultValue?: string, message?: string) {
+        super(_.isNil(defaultValue) ? '' : defaultValue);
         this.maxLength = new FieldRule<number>(null, '?0: exceeds the maximum length of ?1:');
         this.minLength = new FieldRule<number>(null, '?0: is shorter than the minimum length of ?1:');
         if (!_.isNil(message)){
@@ -211,15 +214,15 @@ class StringImpl extends AnyImpl implements IField, IStringFluent {
 }
 
 export class FieldFactory {
-    public static any(name: string, defaultValue: any): IAnyFluent {
-        return new AnyImpl(name, defaultValue);
+    public static any(defaultValue: any): IAnyFluent {
+        return new AnyImpl(defaultValue);
     }
 
-    public static int(name: string, defaultValue?: number, typeValidationMessage?: string): IIntFluent {
-        return new IntImpl(name, defaultValue, typeValidationMessage);
+    public static int(defaultValue?: number, typeValidationMessage?: string): IIntFluent {
+        return new IntImpl(defaultValue, typeValidationMessage);
     }
 
-    public static string(name: string, defaultValue?: string, typeValidationMessage?: string): IStringFluent {
-        return new StringImpl(name, defaultValue, typeValidationMessage);
+    public static string(defaultValue?: string, typeValidationMessage?: string): IStringFluent {
+        return new StringImpl(defaultValue, typeValidationMessage);
     }
 }

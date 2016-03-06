@@ -1,17 +1,18 @@
 ///<reference path="../_all.d.ts"/>
-import {Connection as Repongo, Fields} from '../index';
+import * as repongo from '../index';
 import * as should from 'should';
 
 describe('With an empty Repository,', () => {
 
-    var db = new Repongo('mongodb://localhost/my_database');
+    const db = new repongo.Connection('mongodb://localhost/my_database');
+    const field = repongo.fieldFactory;
 
     describe('And a defined schema', () => {
-        let catSchema = Repongo.createSchema('cats');
-        catSchema.addField(Fields.string('name').isRequired());
-        catSchema.addField(Fields.int('age'));
+        const catSchema = repongo.schemaFactory.create('cats');
+        catSchema.addField('name', field.string().isRequired());
+        catSchema.addField('age', field.int());
 
-        var repoUnderTest = db.createRepository(catSchema);
+        const repoUnderTest = db.createRepository(catSchema);
 
         beforeEach(() => {
             repoUnderTest.clear();
@@ -19,7 +20,7 @@ describe('With an empty Repository,', () => {
 
         describe('when an invalid cat is inserted', () => {
             it('causes an error', (done: () => void) => {
-                var badCat = {age: 'xyz'};
+                const badCat = {age: 'xyz'};
                 repoUnderTest.save(badCat)
                     .catch((err: any) => {
                         should.exist(err);

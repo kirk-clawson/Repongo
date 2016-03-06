@@ -8,7 +8,7 @@ export interface ISchema {
     validate(object: any): void;
     j2m(json: any): IMongoObject | IMongoObject[];
     m2j(bson: IMongoObject | IMongoObject[]): any;
-    addField(fieldDefinition: IFluent): void;
+    addField(fieldName: string, fieldDefinition: IFluent): void;
     addModel(model: any): void;
 }
 
@@ -23,9 +23,10 @@ class Schema implements ISchema {
         this.fields = [];
     }
 
-    public addField(fieldDefinition: IFluent): void {
+    public addField(fieldName: string, fieldDefinition: IFluent): void {
+        if (_.isNil(fieldName)) throw 'Cannot add an unnamed field to the schema';
         if (_.isNil(fieldDefinition)) throw 'Cannot add a null or undefined field to the schema';
-        this.fields.push(fieldDefinition.getField());
+        this.fields.push(fieldDefinition.getField(fieldName));
     }
 
     public addModel(model: any): void {
@@ -34,8 +35,7 @@ class Schema implements ISchema {
             if (model.hasOwnProperty(field)) {
                 let prop: IFluent = model[field];
                 if (prop.getField !== undefined && typeof prop.getField === 'function') {
-                    let fieldActual: IField = prop.getField();
-                    fieldActual.name = field;
+                    let fieldActual: IField = prop.getField(field);
                     this.fields.push(fieldActual);
                 }
             }
