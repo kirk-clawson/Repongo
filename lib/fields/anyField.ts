@@ -7,7 +7,7 @@ interface IAnyFluent extends IFluentValidator<IAnyFluent> {
 }
 
 class AnyImpl implements IField, IAnyFluent {
-    static defaultRequiredMessage: string = '?0: is a required field';
+    static defaultRequiredMessage: string = '${0} is a required field';
 
     name: string;
     defaultValue: any;

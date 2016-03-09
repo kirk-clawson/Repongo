@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
-import {IField, IFluentValidator, FieldRule} from './base';
-import {stringFormat} from '../util';
+import {IField, IFluentValidator, FieldRule } from './base';
+import {stringFormat } from '../util';
 import {AnyImpl} from './anyField';
 
 interface INumberFluent extends IFluentValidator<INumberFluent> {
@@ -10,9 +10,9 @@ interface INumberFluent extends IFluentValidator<INumberFluent> {
 }
 
 class NumberImpl extends AnyImpl implements IField, INumberFluent {
-    static defaultMinMessage: string = '?0: value of ?1: is less than the minimum value of ?2:';
-    static defaultMaxMessage: string = '?0: value of ?1: exceeds the maximum value of ?2:';
-    static defaultTypeMessage: string = '?0: does not match the specified data type (Number)';
+    static defaultMinMessage: string = '${0} value of ${1} is less than the minimum value of ${2}';
+    static defaultMaxMessage: string = '${0} value of ${1} exceeds the maximum value of ${2}';
+    static defaultTypeMessage: string = '${0} does not match the specified data type (Number)';
 
     max: FieldRule<number>;
     min: FieldRule<number>;

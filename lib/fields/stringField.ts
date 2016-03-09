@@ -10,9 +10,9 @@ interface IStringFluent extends IFluentValidator<IStringFluent> {
 }
 
 class StringImpl extends AnyImpl implements IField, IStringFluent {
-    static defaultMaxLengthMessage: string = '?0: exceeds the maximum length of ?1:';
-    static defaultMinLengthMessage: string = '?0: is shorter than the minimum length of ?1:';
-    static defaultTypeMessage: string = '?0: does not match the specified data type (String)';
+    static defaultMaxLengthMessage: string = '${0} exceeds the maximum length of ${1}';
+    static defaultMinLengthMessage: string = '${0} is shorter than the minimum length of ${1}';
+    static defaultTypeMessage: string = '${0} does not match the specified data type (String)';
 
     maxLength: FieldRule<number>;
     minLength: FieldRule<number>;

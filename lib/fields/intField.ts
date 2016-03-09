@@ -11,7 +11,7 @@ interface IIntFluent extends IFluentValidator<IIntFluent> {
 }
 
 class IntImpl extends NumberImpl implements IField, IIntFluent {
-    static defaultTypeMessage: string = '?0: does not match the specified data type (Integer)';
+    static defaultTypeMessage: string = '${0} does not match the specified data type (Integer)';
 
     constructor();
     constructor(defaultValue: number);

@@ -19,7 +19,7 @@ function getIdFromString(id: string): any {
 function stringFormat(message: string, ...substitutions: any[]): string {
     let result = message;
     for (let i = 0; i < substitutions.length; ++i) {
-        let token = ':' + i + '?';
+        let token = '${' + i + '}';
         result = _.replace(result, token, substitutions[i])
     }
     return result;
