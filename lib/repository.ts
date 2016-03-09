@@ -1,5 +1,3 @@
-///<reference path="../_all.d.ts"/>
-
 import * as _ from 'lodash';
 import * as Promise from 'bluebird';
 import {ISchema} from './schema';

@@ -1,4 +1,3 @@
-
 import {IStringFluent, StringImpl} from './stringField';
 import {IIntFluent, IntImpl} from './intField';
 import {IAnyFluent, AnyImpl} from './anyField';

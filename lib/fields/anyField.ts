@@ -1,4 +1,3 @@
-///<reference path="../../_all.d.ts"/>
 import * as _ from 'lodash';
 
 import {IField, IFluentValidator, FieldRule} from './base';

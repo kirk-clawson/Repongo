@@ -1,4 +1,3 @@
-///<reference path="../../_all.d.ts"/>
 import * as _ from 'lodash';
 
 interface IField {

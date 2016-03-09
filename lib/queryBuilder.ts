@@ -1,5 +1,3 @@
-///<reference path="../_all.d.ts"/>
-
 import {ISchema} from './schema';
 
 interface IQuery {

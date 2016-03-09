@@ -1,4 +1,3 @@
-///<reference path="../_all.d.ts"/>
 import {Connection} from '../index';
 import * as should from 'should';
 

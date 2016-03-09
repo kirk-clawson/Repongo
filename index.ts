@@ -1,4 +1,3 @@
-///<reference path="_all.d.ts"/>
 var mongo = require('mongojs');
 
 import {FieldFactory} from './lib/fields/factory';
