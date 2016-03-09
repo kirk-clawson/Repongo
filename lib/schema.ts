@@ -16,7 +16,9 @@ class Schema implements ISchema {
     private allowExtraJsonFields: boolean;
     private fields: IField[];
 
-    constructor(catalogName: string, allowExtraJsonFields?: boolean) {
+    constructor(catalogName: string);
+    constructor(catalogName: string, allowExtraJsonFields?: boolean)
+    constructor(catalogName: string, allowExtraJsonFields: boolean = true) {
         this.catalogName = catalogName;
         this.allowExtraJsonFields = allowExtraJsonFields;
         this.fields = [];
@@ -144,8 +146,8 @@ class Schema implements ISchema {
 
 class SchemaFactory {
     public static create(catalogName: string): ISchema;
-    public static create(catalogName: string, allowExtraFields: boolean): ISchema;
-    public static create(catalogName: string, allowExtraFields?: boolean): ISchema {
+    public static create(catalogName: string, allowExtraFields?: boolean): ISchema;
+    public static create(catalogName: string, allowExtraFields: boolean = true): ISchema {
         return new Schema(catalogName, allowExtraFields);
     }
 }
