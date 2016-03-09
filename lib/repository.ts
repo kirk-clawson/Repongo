@@ -5,7 +5,7 @@ import * as Promise from 'bluebird';
 import {ISchema} from './schema';
 import {IQuery} from './queryBuilder';
 import {SchemaFactory} from './schema';
-
+import {IMongoObject, getIdFromString} from './util';
 
 export interface IRepository {
     getAll(): Promise<any[]>;

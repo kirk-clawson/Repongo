@@ -1,7 +1,8 @@
 ///<reference path="../_all.d.ts"/>
 
 import * as _ from 'lodash';
-import {IField, IFluent} from './fields';
+import {IField, IFluent} from './fields/factory';
+import {IMongoObject, getIdFromString} from './util';
 
 export interface ISchema {
     catalogName: string;

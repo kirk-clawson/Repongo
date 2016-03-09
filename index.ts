@@ -1,7 +1,7 @@
 ///<reference path="_all.d.ts"/>
 var mongo = require('mongojs');
 
-import {FieldFactory} from './lib/fields';
+import {FieldFactory} from './lib/fields/factory';
 import {ISchema, SchemaFactory} from './lib/schema';
 import {RepositoryFactory, IRepository} from './lib/repository';
 

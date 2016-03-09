@@ -4,4 +4,4 @@
 ///<reference path="lib/schema.ts"/>
 ///<reference path="lib/util.ts"/>
 ///<reference path="index.ts"/>
-///<reference path="lib/fields.ts"/>
+///<reference path="lib/fields/factory.ts"/>
