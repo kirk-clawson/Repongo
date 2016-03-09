@@ -8,9 +8,12 @@ describe('With an empty Repository,', () => {
     const field = repongo.fieldFactory;
 
     describe('And a defined schema', () => {
+        const catModel = {
+            name: field.string().isRequired(),
+            age: field.int()
+        };
         const catSchema = repongo.schemaFactory.create('cats');
-        catSchema.addField('name', field.string().isRequired());
-        catSchema.addField('age', field.int());
+        catSchema.addModel(catModel);
 
         const repoUnderTest = db.createRepository(catSchema);
 

@@ -2,7 +2,7 @@
   "name": "repongo",
   "version": "0.1.0",
   "description": "Repository Pattern implementation for MongoDB",
-  "main": "main.js",
+  "main": "index.js",
   "directories": {
     "test": "test"
   },
