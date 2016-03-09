@@ -2,7 +2,7 @@
 
 import {ISchema} from './schema';
 
-export interface IQuery {
+interface IQuery {
     encode(): any;
 }
 
@@ -10,3 +10,5 @@ class Builder {
     constructor(schema: ISchema) {
     }
 }
+
+export { IQuery };

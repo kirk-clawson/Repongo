@@ -5,15 +5,15 @@ import {IField, IFluentValidator, FieldRule} from './base';
 import {stringFormat} from '../util';
 import {AnyImpl} from './anyField';
 
-interface IIntFluent extends IFluentValidator<IIntFluent> {
-    hasMaximumOf(value: number, message?: string): IIntFluent;
-    hasMinimumOf(value: number, message?: string): IIntFluent;
+interface IFloatFluent extends IFluentValidator<IFloatFluent> {
+    hasMaximumOf(value: number, message?: string): IFloatFluent;
+    hasMinimumOf(value: number, message?: string): IFloatFluent;
 }
 
-class IntImpl extends AnyImpl implements IField, IIntFluent {
+class FloatImpl extends AnyImpl implements IField, IFloatFluent {
     static defaultMinMessage: string = '?0: value of ?1: is less than the minimum value of ?2:';
     static defaultMaxMessage: string = '?0: value of ?1: exceeds the maximum value of ?2:';
-    static defaultTypeMessage: string = '?0: does not match the specified data type (Integer)';
+    static defaultTypeMessage: string = '?0: does not match the specified data type (Float)';
 
     max: FieldRule<number>;
     min: FieldRule<number>;
@@ -22,16 +22,16 @@ class IntImpl extends AnyImpl implements IField, IIntFluent {
     constructor();
     constructor(defaultValue: number);
     constructor(defaultValue?: number, message?: string);
-    constructor(defaultValue: number = 0, message: string = IntImpl.defaultTypeMessage) {
+    constructor(defaultValue: number = 0, message: string = FloatImpl.defaultTypeMessage) {
         super(_.isNil(defaultValue) ? 0 : defaultValue);
-        this.max = new FieldRule<number>(null, IntImpl.defaultMaxMessage);
-        this.min = new FieldRule<number>(null, IntImpl.defaultMinMessage);
+        this.max = new FieldRule<number>(null, FloatImpl.defaultMaxMessage);
+        this.min = new FieldRule<number>(null, FloatImpl.defaultMinMessage);
         this.dataTypeMessage = message;
     }
 
     isValid(value: any): boolean {
         let result = super.isValid(value);
-        if (!_.isInteger(value)) {
+        if (!_.isNumber(value)) {
             this.messages.push(stringFormat(this.dataTypeMessage, this.name));
             return false;
         }
@@ -46,26 +46,26 @@ class IntImpl extends AnyImpl implements IField, IIntFluent {
         return result;
     }
 
-    isRequired(): IIntFluent;
-    isRequired(message?: string): IIntFluent;
-    isRequired(message: string = AnyImpl.defaultRequiredMessage): IIntFluent {
+    isRequired(): IFloatFluent;
+    isRequired(message?: string): IFloatFluent;
+    isRequired(message: string = AnyImpl.defaultRequiredMessage): IFloatFluent {
         super.isRequired(message);
         return this;
     }
 
-    hasMaximumOf(value: number): IIntFluent;
-    hasMaximumOf(value: number, message: string = IntImpl.defaultMaxMessage): IIntFluent {
+    hasMaximumOf(value: number): IFloatFluent;
+    hasMaximumOf(value: number, message: string = FloatImpl.defaultMaxMessage): IFloatFluent {
         this.max.value = value;
         this.max.setNonNullMessage(message);
         return this;
     }
 
-    hasMinimumOf(value: number): IIntFluent;
-    hasMinimumOf(value: number, message: string = IntImpl.defaultMinMessage): IIntFluent {
+    hasMinimumOf(value: number): IFloatFluent;
+    hasMinimumOf(value: number, message: string = FloatImpl.defaultMinMessage): IFloatFluent {
         this.min.value = value;
         this.min.setNonNullMessage(message);
         return this;
     }
 }
 
-export { IIntFluent, IntImpl };
+export { IFloatFluent, FloatImpl };

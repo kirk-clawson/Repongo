@@ -5,12 +5,12 @@ import {IField, IFluentValidator, FieldRule} from './base';
 import {stringFormat} from '../util';
 import {AnyImpl} from './anyField';
 
-export interface IStringFluent extends IFluentValidator<IStringFluent> {
+interface IStringFluent extends IFluentValidator<IStringFluent> {
     hasMaxLengthOf: (value: number, message?: string) => IStringFluent;
     hasMinLengthOf: (value: number, message?: string) => IStringFluent;
 }
 
-export class StringImpl extends AnyImpl implements IField, IStringFluent {
+class StringImpl extends AnyImpl implements IField, IStringFluent {
     static defaultMaxLengthMessage: string = '?0: exceeds the maximum length of ?1:';
     static defaultMinLengthMessage: string = '?0: is shorter than the minimum length of ?1:';
     static defaultTypeMessage: string = '?0: does not match the specified data type (String)';
@@ -67,3 +67,5 @@ export class StringImpl extends AnyImpl implements IField, IStringFluent {
         return this;
     }
 }
+
+export { IStringFluent, StringImpl };

@@ -7,7 +7,7 @@ import {IQuery} from './queryBuilder';
 import {SchemaFactory} from './schema';
 import {IMongoObject, getIdFromString} from './util';
 
-export interface IRepository {
+interface IRepository {
     getAll(): Promise<any[]>;
     get(id: string): Promise<any>;
     query(query: IQuery): Promise<any[]>;
@@ -84,7 +84,7 @@ class Repository implements IRepository {
     }
 }
 
-export class RepositoryFactory {
+class RepositoryFactory {
     public static create(schema: string | ISchema, db: any): IRepository {
         if (_.isString(schema)) {
             var tempSchema = SchemaFactory.create(schema, true);
@@ -94,3 +94,5 @@ export class RepositoryFactory {
         }
     }
 }
+
+export { IRepository, RepositoryFactory };

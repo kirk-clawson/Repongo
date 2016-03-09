@@ -4,10 +4,10 @@ import * as _ from 'lodash';
 import {IField, IFluentValidator, FieldRule} from './base';
 import {stringFormat} from '../util';
 
-export interface IAnyFluent extends IFluentValidator<IAnyFluent> {
+interface IAnyFluent extends IFluentValidator<IAnyFluent> {
 }
 
-export class AnyImpl implements IField, IAnyFluent {
+class AnyImpl implements IField, IAnyFluent {
     static defaultRequiredMessage: string = '?0: is a required field';
 
     name: string;
@@ -43,3 +43,5 @@ export class AnyImpl implements IField, IAnyFluent {
         return this;
     }
 }
+
+export { IAnyFluent, AnyImpl };
