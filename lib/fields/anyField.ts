@@ -1,12 +1,9 @@
 import * as _ from 'lodash';
 
-import {IField, IFluentValidator, FieldRule} from './base';
+import {IField, FieldRule, IFluent} from './base';
 import {stringFormat} from '../util';
 
-interface IAnyFluent extends IFluentValidator<IAnyFluent> {
-}
-
-class AnyImpl implements IField, IAnyFluent {
+class AnyImpl implements IField, IFluent {
     static defaultRequiredMessage: string = '${0} is a required field';
 
     name: string;
@@ -34,13 +31,13 @@ class AnyImpl implements IField, IAnyFluent {
         return this;
     }
 
-    isRequired(): IAnyFluent;
-    isRequired(message?: string): IAnyFluent;
-    isRequired(message: string = AnyImpl.defaultRequiredMessage): IAnyFluent {
+    isRequired(): this;
+    isRequired(message?: string): this;
+    isRequired(message: string = AnyImpl.defaultRequiredMessage): this {
         this.fieldIsRequired.value = true;
         this.fieldIsRequired.setNonNullMessage(message);
         return this;
     }
 }
 
-export { IAnyFluent, AnyImpl };
+export { AnyImpl };

@@ -1,12 +1,12 @@
 import * as _ from 'lodash';
 
-import {IField, IFluentValidator, FieldRule} from './base';
+import {IField, IFluent, FieldRule} from './base';
 import {stringFormat} from '../util';
 import {AnyImpl} from './anyField';
 
-interface IStringFluent extends IFluentValidator<IStringFluent> {
-    hasMaxLengthOf: (value: number, message?: string) => IStringFluent;
-    hasMinLengthOf: (value: number, message?: string) => IStringFluent;
+interface IStringFluent extends IFluent {
+    hasMaxLengthOf(value: number, message?: string): this;
+    hasMinLengthOf(value: number, message?: string): this;
 }
 
 class StringImpl extends AnyImpl implements IField, IStringFluent {
@@ -45,22 +45,15 @@ class StringImpl extends AnyImpl implements IField, IStringFluent {
         return result;
     }
 
-    isRequired(): IStringFluent;
-    isRequired(message?: string): IStringFluent;
-    isRequired(message: string = AnyImpl.defaultRequiredMessage): IStringFluent {
-        super.isRequired(message);
-        return this;
-    }
-
-    hasMaxLengthOf(value: number): IStringFluent;
-    hasMaxLengthOf(value: number, message: string = StringImpl.defaultMaxLengthMessage): IStringFluent {
+    hasMaxLengthOf(value: number): this;
+    hasMaxLengthOf(value: number, message: string = StringImpl.defaultMaxLengthMessage): this {
         this.maxLength.value = value;
         this.maxLength.setNonNullMessage(message);
         return this;
     }
 
-    hasMinLengthOf(value: number): IStringFluent;
-    hasMinLengthOf(value: number, message: string = StringImpl.defaultMinLengthMessage): IStringFluent {
+    hasMinLengthOf(value: number): this;
+    hasMinLengthOf(value: number, message: string = StringImpl.defaultMinLengthMessage): this {
         this.maxLength.value = value;
         this.maxLength.setNonNullMessage(message);
         return this;

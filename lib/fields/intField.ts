@@ -1,16 +1,11 @@
 import * as _ from 'lodash';
 
-import {IField, IFluentValidator, FieldRule} from './base';
+import {IField, IFluent, FieldRule} from './base';
 import {stringFormat} from '../util';
 import {AnyImpl} from './anyField';
-import {NumberImpl} from "./numberField";
+import {INumberFluent, NumberImpl} from "./numberField";
 
-interface IIntFluent extends IFluentValidator<IIntFluent> {
-    hasMaximumOf(value: number, message?: string): IIntFluent;
-    hasMinimumOf(value: number, message?: string): IIntFluent;
-}
-
-class IntImpl extends NumberImpl implements IField, IIntFluent {
+class IntImpl extends NumberImpl implements IField, INumberFluent {
     static defaultTypeMessage: string = '${0} does not match the specified data type (Integer)';
 
     constructor();
@@ -27,27 +22,6 @@ class IntImpl extends NumberImpl implements IField, IIntFluent {
         }
         return super.isValid(value);
     }
-
-    isRequired(): IIntFluent;
-    isRequired(message?: string): IIntFluent;
-    isRequired(message: string = AnyImpl.defaultRequiredMessage): IIntFluent {
-        super.isRequired(message);
-        return this;
-    }
-
-    hasMaximumOf(value: number): IIntFluent;
-    hasMaximumOf(value: number, message?: string): IIntFluent;
-    hasMaximumOf(value: number, message: string = IntImpl.defaultMaxMessage): IIntFluent {
-        super.hasMaximumOf(value, message);
-        return this;
-    }
-
-    hasMinimumOf(value: number): IIntFluent;
-    hasMinimumOf(value: number, message?: string): IIntFluent;
-    hasMinimumOf(value: number, message: string = IntImpl.defaultMinMessage): IIntFluent {
-        super.hasMinimumOf(value, message);
-        return this;
-    }
 }
 
-export { IIntFluent, IntImpl };
+export { IntImpl };

@@ -9,10 +9,7 @@ interface IField {
 
 interface IFluent {
     getField(name: string): IField;
-}
-
-interface IFluentValidator<TDerived> extends IFluent {
-    isRequired(message?: string): TDerived
+    isRequired(message?: string): this
 }
 
 class FieldRule<TRuleType> {
@@ -26,4 +23,4 @@ class FieldRule<TRuleType> {
     }
 }
 
-export { IField, IFluent, IFluentValidator, FieldRule };
+export { IField, IFluent, FieldRule };
