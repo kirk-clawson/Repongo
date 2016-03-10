@@ -4,7 +4,7 @@ import * as should from 'should';
 describe('With an empty Repository,', () => {
 
     const db = new Connection('mongodb://localhost/repongo_test');
-    const repoUnderTest = db.createRepository('cat');
+    const repoUnderTest = db.createRepository('cats');
 
     describe('when a cat is inserted', () => {
         it('Inserts one record that can be read back', (done: () => void) => {

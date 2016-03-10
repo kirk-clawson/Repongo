@@ -2,7 +2,7 @@ import {IStringFluent, StringImpl} from './stringField';
 import {IIntFluent, IntImpl} from './intField';
 import {IAnyFluent, AnyImpl} from './anyField';
 import {IField, IFluent} from './base';
-import {IFloatFluent, FloatImpl} from './floatField';
+import {INumberFluent, NumberImpl} from './numberField';
 
 class Factory {
     public static any(defaultValue: any): IAnyFluent {
@@ -13,8 +13,8 @@ class Factory {
         return new IntImpl(defaultValue, typeValidationMessage);
     }
 
-    public static float(defaultValue?: number, typeValidationMessage?: string): IFloatFluent {
-        return new FloatImpl(defaultValue, typeValidationMessage);
+    public static number(defaultValue?: number, typeValidationMessage?: string): INumberFluent {
+        return new NumberImpl(defaultValue, typeValidationMessage);
     }
 
     public static string(defaultValue?: string, typeValidationMessage?: string): IStringFluent {
