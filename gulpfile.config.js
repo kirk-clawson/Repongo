@@ -2,18 +2,18 @@
 'use strict';
 var GulpConfig = (function () {
     function gulpConfig() {
-        //Got tired of scrolling through all the comments so removed them
-        //Don't hurt me AC :-)
+        this.sourceDir = 'src';
+        this.debugDir = 'debug';
+        this.prodDir = 'build';
 
-        this.baseDir = './';
+        this.defsOutDir = 'definitions';
+        this.defsInDir = 'typings';
 
-        this.sourceFiles = this.baseDir + 'src/**/*.ts';
-        this.testFiles = this.baseDir + 'test/**/*.ts';
-        this.typings = this.baseDir + 'typings/**/*.d.ts';
+        this.testDir = '/test';
 
-        this.allTsFiles = this.baseDir + '**/*.ts';
-
-        this.outDir = this.baseDir + 'build';
+        this.tsFiles = '/**/*.ts';
+        this.jsFiles = '/**/*.js';
+        this.mapFiles = '/**/*.js.map';
     }
     return gulpConfig;
 })();

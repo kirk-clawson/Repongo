@@ -7,8 +7,9 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     del = require('del'),
     Config = require('./gulpfile.config'),
-    tsProject = tsc.createProject('tsconfig.json');
+    merge = require('merge2');
 
+var tsProject = tsc.createProject('tsconfig.json');
 var config = new Config();
 
 /**
@@ -29,21 +30,41 @@ var config = new Config();
 /**
  * Compile TypeScript and include references to library and app .d.ts files.
  */
-gulp.task('tsc-main', function () {
+gulp.task('tsc-debug', function () {
     var sourceTsFiles = [
-        config.sourceFiles,
-        config.testFiles,
-        config.typings
+        config.sourceDir + config.tsFiles,
+        config.defsInDir + config.tsFiles
     ];
 
-    var tsResult = gulp.src(sourceTsFiles, { base: config.baseDir })
+    var tsResult = gulp
+        .src(sourceTsFiles, { base: config.sourceDir })
         .pipe(sourcemaps.init())
         .pipe(tsc(tsProject));
 
-    tsResult.dts.pipe(gulp.dest(config.outDir));
-    return tsResult.js
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(config.outDir));
+    return merge([
+        tsResult.dts
+            .pipe(gulp.dest(config.defsOutDir)),
+        tsResult.js
+            .pipe(sourcemaps.write('.'))
+            .pipe(gulp.dest(config.debugDir))
+    ]);
+});
+
+gulp.task('tsc-production', function () {
+    var sourceTsFiles = [
+        config.sourceDir + config.tsFiles,
+        config.defsInDir + config.tsFiles,
+        '!' + config.sourceDir + config.testDir + config.tsFiles
+    ];
+
+    var tsResult = gulp
+        .src(sourceTsFiles, { base: config.sourceDir })
+        .pipe(tsc(tsProject, undefined, tsc.reporter.longReporter()));
+
+    return merge([
+        tsResult.dts.pipe(gulp.dest(config.defsOutDir)),
+        tsResult.js.pipe(gulp.dest(config.prodDir))
+    ]);
 });
 
 /**
@@ -51,15 +72,15 @@ gulp.task('tsc-main', function () {
  */
 gulp.task('clean-ts', function (cb) {
     var typeScriptGenFiles = [
-        config.outDir +'/**/*.js',    // path to all JS files auto gen'd by editor
-        config.outDir +'/**/*.js.map' // path to all sourcemap files auto gen'd by editor
+        config.debugDir + config.jsFiles,    // path to all JS files auto gen'd by editor
+        config.debugDir + config.mapFiles // path to all sourcemap files auto gen'd by editor
     ];
     // delete the files
     del(typeScriptGenFiles, cb);
 });
 
 gulp.task('watch', function() {
-    gulp.watch([config.allTsFiles], ['tsc-main']);
+    gulp.watch([config.sourceDir + config.tsFiles], ['tsc-debug']);
 });
 
-gulp.task('default', ['tsc-main']);
+gulp.task('default', ['tsc-debug']);
