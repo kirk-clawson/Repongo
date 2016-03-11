@@ -1,12 +1,12 @@
 import * as _ from 'lodash';
 
-import {IField, IFluentValidator, FieldRule } from './base';
+import {IField, IFluent, FieldRule } from './base';
 import {stringFormat } from '../util';
 import {AnyImpl} from './anyField';
 
-interface INumberFluent extends IFluentValidator<INumberFluent> {
-    hasMaximumOf(value: number, message?: string): INumberFluent;
-    hasMinimumOf(value: number, message?: string): INumberFluent;
+interface INumberFluent extends IFluent {
+    hasMaximumOf(value: number, message?: string): this;
+    hasMinimumOf(value: number, message?: string): this;
 }
 
 class NumberImpl extends AnyImpl implements IField, INumberFluent {
@@ -45,24 +45,17 @@ class NumberImpl extends AnyImpl implements IField, INumberFluent {
         return result;
     }
 
-    isRequired(): INumberFluent;
-    isRequired(message?: string): INumberFluent;
-    isRequired(message: string = AnyImpl.defaultRequiredMessage): INumberFluent {
-        super.isRequired(message);
-        return this;
-    }
-
-    hasMaximumOf(value: number): INumberFluent;
-    hasMaximumOf(value: number, message?: string): INumberFluent;
-    hasMaximumOf(value: number, message: string = NumberImpl.defaultMaxMessage): INumberFluent {
+    hasMaximumOf(value: number): this;
+    hasMaximumOf(value: number, message?: string): this;
+    hasMaximumOf(value: number, message: string = NumberImpl.defaultMaxMessage): this {
         this.max.value = value;
         this.max.setNonNullMessage(message);
         return this;
     }
 
-    hasMinimumOf(value: number): INumberFluent;
-    hasMinimumOf(value: number, message?: string): INumberFluent;
-    hasMinimumOf(value: number, message: string = NumberImpl.defaultMinMessage): INumberFluent {
+    hasMinimumOf(value: number): this;
+    hasMinimumOf(value: number, message?: string): this;
+    hasMinimumOf(value: number, message: string = NumberImpl.defaultMinMessage): this {
         this.min.value = value;
         this.min.setNonNullMessage(message);
         return this;
