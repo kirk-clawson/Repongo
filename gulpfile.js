@@ -29,22 +29,21 @@ var config = new Config();
 /**
  * Compile TypeScript and include references to library and app .d.ts files.
  */
-gulp.task('compile-ts', function () {
+gulp.task('tsc-main', function () {
     var sourceTsFiles = [
-        'index.ts',
-        config.allTypeScript,
-        config.testTypeScript,
-        config.libraryTypeScriptDefinitions
+        config.sourceFiles,
+        config.testFiles,
+        config.typings
     ];
 
-    var tsResult = gulp.src(sourceTsFiles)
+    var tsResult = gulp.src(sourceTsFiles, { base: config.baseDir })
         .pipe(sourcemaps.init())
         .pipe(tsc(tsProject));
 
-    tsResult.dts.pipe(gulp.dest(config.tsOutputPath));
+    tsResult.dts.pipe(gulp.dest(config.outDir));
     return tsResult.js
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(config.tsOutputPath));
+        .pipe(gulp.dest(config.outDir));
 });
 
 /**
@@ -52,17 +51,15 @@ gulp.task('compile-ts', function () {
  */
 gulp.task('clean-ts', function (cb) {
     var typeScriptGenFiles = [
-        config.tsOutputPath +'/**/*.js',    // path to all JS files auto gen'd by editor
-        config.tsOutputPath +'/**/*.js.map', // path to all sourcemap files auto gen'd by editor
-        '!' + config.tsOutputPath + '/lib'
+        config.outDir +'/**/*.js',    // path to all JS files auto gen'd by editor
+        config.outDir +'/**/*.js.map' // path to all sourcemap files auto gen'd by editor
     ];
-
     // delete the files
     del(typeScriptGenFiles, cb);
 });
 
 gulp.task('watch', function() {
-    gulp.watch([config.allTypeScript], ['compile-ts']);
+    gulp.watch([config.allTsFiles], ['tsc-main']);
 });
 
-gulp.task('default', ['compile-ts']);
+gulp.task('default', ['tsc-main']);

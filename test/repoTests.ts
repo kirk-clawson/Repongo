@@ -1,4 +1,4 @@
-import {Connection} from '../index';
+import {Connection} from '../src/index';
 import * as should from 'should';
 
 describe('With an empty Repository,', () => {
