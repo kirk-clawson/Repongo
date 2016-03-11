@@ -1,6 +1,7 @@
 ### Repongo specific
 *.js.map
 *.js
+!gulpfile*.js
 /typings
 
 ### Node template
