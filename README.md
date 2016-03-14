@@ -1,5 +1,5 @@
 # Repongo
-A repository pattern implementation for MongoDB based on MongoJS. This project offers 3 primary features:
+A repository pattern implementation for MongoDB based on MongoJS. This project offers 4 primary features:
 - Repository pattern with simple data objects
 - Optional schema definition and validation in and out of the repository.
 - A query builder system to easily create custom queries
@@ -14,7 +14,7 @@ npm install repongo
 
 [MongoDB connection string documentation](http://docs.mongodb.org/manual/reference/connection-string/)
 
-###Basic repository usage:
+### Basic repository usage:
 ```JavaScript
 // connecting to a server
 // connection string format is documented at mongodb.org (link above)
@@ -35,7 +35,7 @@ repo.save({name: 'Mr. Puggles', age: 6})
     });
 ```
 
-###Schema example:
+### Schema example:
 ```JavaScript
 var repongo = require('repongo');
 var db = new repongo.Connection('mongodb://localhost/my_database');
