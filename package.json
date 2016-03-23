@@ -27,13 +27,7 @@
     "mongojs": "^2.3.0"
   },
   "devDependencies": {
-    "del": "^2.2.0",
     "gulp": "^3.9.1",
-    "gulp-debug": "^2.1.2",
-    "gulp-inject": "^3.0.0",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-typescript": "^2.12.1",
-    "merge2": "^1.0.1",
     "mocha": "^2.4.5",
     "should": "^8.2.2"
   }

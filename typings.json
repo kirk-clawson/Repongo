@@ -1,0 +1,13 @@
+{
+  "name": "repongo",
+  "version": false,
+  "dependencies": {
+    "bluebird": "registry:npm/bluebird#3.2.1+20160211005852",
+    "lodash": "registry:npm/lodash#4.0.0+20160305082308"
+  },
+  "ambientDependencies": {
+    "mocha": "registry:env/mocha#2.2.5+20160321223601",
+    "node": "registry:dt/node#4.0.0+20160319033040",
+    "should": "registry:dt/should#8.1.1+20160316155526"
+  }
+}
