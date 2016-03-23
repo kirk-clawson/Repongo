@@ -5,5 +5,10 @@
         "noImplicitAny": true,
         "outDir": "./js",
         "sourceMap": true
-    }
+    },
+    "exclude": [
+        "typings/browser.d.ts",
+        "typings/browser",
+        "node_modules"
+    ]
 }
