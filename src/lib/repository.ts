@@ -10,7 +10,7 @@ interface IRepository {
     get(id: string): Promise<any>;
     query(query: IQuery): Promise<any[]>;
     save(item: any): Promise<any>;
-    delete(id: string): Promise<void>;
+    remove(id: string): Promise<void>;
     clear(): void;
 }
 
@@ -72,8 +72,7 @@ class Repository implements IRepository {
         }
     }
 
-    //noinspection ReservedWordAsName
-    public delete(id: string): Promise<any> {
+    public remove(id: string): Promise<any> {
         return undefined;
     }
 
