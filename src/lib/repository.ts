@@ -82,6 +82,9 @@ class Repository implements IRepository {
 }
 
 class RepositoryFactory {
+
+    public static create(schema: string, db: any): IRepository;
+    public static create(schema: ISchema, db: any): IRepository;
     public static create(schema: string | ISchema, db: any): IRepository {
         if (_.isString(schema)) {
             var tempSchema = SchemaFactory.create(schema, true);
@@ -90,6 +93,7 @@ class RepositoryFactory {
             return new Repository(schema, db);
         }
     }
+
 }
 
 export { IRepository, RepositoryFactory };
