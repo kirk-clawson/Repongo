@@ -86,7 +86,7 @@ class Schema implements ISchema {
         if (_.isArray(json)) {
             bson = [];
             for (let i = 0; i < json.length; ++i) {
-                const current = json[i];
+                const current = <any>json[i];
                 this.validate(current);
                 if (current._validationResult.isValid) {
                     bson.push(Schema.convertJsonToBson(current));
