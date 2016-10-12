@@ -2,15 +2,10 @@
 A repository pattern implementation for MongoDB based on MongoJS. This project offers 4 primary features:
 - Repository pattern with simple data objects
 - Optional schema definition and validation in and out of the repository.
-- A query builder system to easily create custom queries
 - A fluent API to define fields on the schema
+- A query builder system to easily create custom queries (future)
 
 More information, examples, and API documentation can be found on the [Wiki site](https://github.com/kirk-clawson/Repongo/wiki).
-
-Installation:
-```
-npm install repongo
-```
 
 [MongoDB connection string documentation](http://docs.mongodb.org/manual/reference/connection-string/)
 
