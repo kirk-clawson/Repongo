@@ -1,14 +1,17 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
+        "target": "es6",
         "noImplicitAny": true,
-        "outDir": "./js",
+        //"outFile": "./dist/repongo.js",
+        //"declarationDir": "./dist",
+        //"declaration": true,
         "sourceMap": true
     },
     "exclude": [
         "typings/browser.d.ts",
         "typings/browser",
+        "dist",
         "node_modules"
     ]
 }

@@ -1,17 +1,17 @@
-import * as repongo from '../src/index';
+import {Repongo} from '../src/index';
 import * as should from 'should';
 
 describe('With an empty Repository,', () => {
 
-    const db = new repongo.Connection('mongodb://localhost/my_database');
-    const field = repongo.fieldFactory;
+    const db = Repongo.connect('mongodb://localhost/repongo_test');
+    const field = Repongo.fieldFactory;
 
     describe('And a defined schema', () => {
         const catModel = {
             name: field.string().isRequired(),
             age: field.int()
         };
-        const catSchema = repongo.schemaFactory.create('cats');
+        const catSchema = Repongo.schemaFactory.create('cats');
         catSchema.addModel(catModel);
 
         const repoUnderTest = db.createRepository(catSchema);

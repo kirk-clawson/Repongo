@@ -4,8 +4,7 @@ import {FieldFactory} from './lib/fields/factory';
 import {ISchema, SchemaFactory} from './lib/schema';
 import {RepositoryFactory, IRepository} from './lib/repository';
 
-
-class Connection {
+export class Connection {
     private _db: any;
 
     constructor(connectionString: string){
@@ -19,4 +18,10 @@ class Connection {
     }
 }
 
-export {Connection, FieldFactory as fieldFactory, SchemaFactory as schemaFactory};
+export class Repongo {
+    public static fieldFactory: FieldFactory;
+    public static schemaFactory: SchemaFactory;
+    public static connect(connectionString: string): Connection {
+        return new Connection(connectionString);
+    }
+}

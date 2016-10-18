@@ -4,7 +4,7 @@ import { AnyImpl} from './anyField';
 import {IField, IFluent} from './base';
 import {INumberFluent, NumberImpl} from './numberField';
 
-class Factory {
+export class FieldFactory {
     public static any(defaultValue: any): IFluent {
         return new AnyImpl(defaultValue);
     }
@@ -21,5 +21,3 @@ class Factory {
         return new StringImpl(defaultValue, typeValidationMessage);
     }
 }
-
-export {Factory as FieldFactory, IField, IFluent};

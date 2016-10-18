@@ -1,6 +1,10 @@
 ### Repongo specific
-/js
+/dist
 /typings
+/src/**/*.js
+/src/**/*.js.map
+/test/*.js
+/test/*.js.map
 
 ### Node template
 # Logs

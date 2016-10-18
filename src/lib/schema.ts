@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
-import {IField, IFluent} from './fields/factory';
 import {IMongoObject, getIdFromString} from './util';
+import {IFluent, IField} from "./fields/base";
 
-interface ISchema {
+export interface ISchema {
     catalogName: string;
     validate(object: any): void;
     j2m(json: any): IMongoObject | IMongoObject[];
@@ -144,12 +144,10 @@ class Schema implements ISchema {
     }
 }
 
-class SchemaFactory {
+export class SchemaFactory {
     public static create(catalogName: string): ISchema;
     public static create(catalogName: string, allowExtraFields?: boolean): ISchema;
     public static create(catalogName: string, allowExtraFields: boolean = true): ISchema {
         return new Schema(catalogName, allowExtraFields);
     }
 }
-
-export { ISchema, SchemaFactory };

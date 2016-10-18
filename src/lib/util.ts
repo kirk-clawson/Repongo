@@ -25,4 +25,4 @@ function stringFormat(message: string, ...substitutions: any[]): string {
     return result;
 }
 
-export { stringFormat, getIdFromString, IMongoObject };
+export { stringFormat, getIdFromString, IValidationStatus, IMongoObject };
