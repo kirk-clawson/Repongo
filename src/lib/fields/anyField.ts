@@ -33,7 +33,7 @@ export class AnyImpl implements IField, IFluent {
     isRequired(message?: string): this;
     isRequired(message: string = AnyImpl.defaultRequiredMessage): this {
         this.fieldIsRequired.value = true;
-        this.fieldIsRequired.setNonNullMessage(message);
+        this.fieldIsRequired.setMessage(message);
         return this;
     }
 }

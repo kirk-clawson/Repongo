@@ -18,7 +18,7 @@ export class FieldRule<TRuleType> {
         return this.value != null;
     }
 
-    setNonNullMessage(message?: string): void {
+    setMessage(message: string): void {
         if (message != null) {
             this.message = message;
         }

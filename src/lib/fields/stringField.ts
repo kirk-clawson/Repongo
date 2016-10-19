@@ -48,14 +48,14 @@ export class StringImpl extends AnyImpl implements IField, IStringFluent {
     hasMaxLengthOf(value: number): this;
     hasMaxLengthOf(value: number, message: string = StringImpl.defaultMaxLengthMessage): this {
         this.maxLength.value = value;
-        this.maxLength.setNonNullMessage(message);
+        this.maxLength.setMessage(message);
         return this;
     }
 
     hasMinLengthOf(value: number): this;
     hasMinLengthOf(value: number, message: string = StringImpl.defaultMinLengthMessage): this {
         this.minLength.value = value;
-        this.minLength.setNonNullMessage(message);
+        this.minLength.setMessage(message);
         return this;
     }
 }
