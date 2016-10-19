@@ -10,7 +10,7 @@ export interface IRepository<TModel> {
     get(id: string): Promise<TModel>;
     query(query: IQuery): Promise<TModel[]>;
     save(item: TModel): Promise<TModel>;
-    //remove(id: string): Promise<void>;
+    remove(id: string): Promise<void>;
     clear(): void;
 }
 
@@ -80,9 +80,9 @@ class Repository<TModel> implements IRepository<TModel> {
         }
     }
 
-    /*public remove(id: string): Promise<any> {
-        return undefined;
-    }*/
+    public remove(id: string): Promise<void> {
+        return this._promiseApi.remove({_id: getIdFromString(id)});
+    }
 
     public clear(): void {
         this._dbCollection.remove({});
