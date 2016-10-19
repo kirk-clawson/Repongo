@@ -81,7 +81,7 @@ class Repository<TModel> implements IRepository<TModel> {
     }
 
     public remove(id: string): Promise<void> {
-        return this._promiseApi.remove({_id: getIdFromString(id)});
+        return this._promiseApi.remove({_id: getIdFromString(id)}, {justOne: true});
     }
 
     public clear(): void {
