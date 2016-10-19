@@ -1,10 +1,11 @@
-import {IStringFluent, StringImpl} from './stringField';
-import { IntImpl} from './intField';
-import { AnyImpl} from './anyField';
-import {IField, IFluent} from './base';
-import {INumberFluent, NumberImpl} from './numberField';
+import { IStringFluent, StringImpl } from './stringField';
+import { IntImpl } from './intField';
+import { AnyImpl } from './anyField';
+import { IFluent } from './base';
+import { INumberFluent, NumberImpl } from './numberField';
 
 export class FieldFactory {
+
     public static any(defaultValue: any): IFluent {
         return new AnyImpl(defaultValue);
     }
@@ -20,4 +21,5 @@ export class FieldFactory {
     public static string(defaultValue?: string, typeValidationMessage?: string): IStringFluent {
         return new StringImpl(defaultValue, typeValidationMessage);
     }
+
 }

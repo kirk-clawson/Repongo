@@ -1,11 +1,10 @@
 import * as _ from 'lodash';
 
-import {IField, IFluent, FieldRule} from './base';
-import {stringFormat} from '../util';
-import {AnyImpl} from './anyField';
-import {INumberFluent, NumberImpl} from "./numberField";
+import { IField } from './base';
+import { stringFormat } from '../util';
+import { INumberFluent, NumberImpl } from "./numberField";
 
-class IntImpl extends NumberImpl implements IField, INumberFluent {
+export class IntImpl extends NumberImpl implements IField, INumberFluent {
     static defaultTypeMessage: string = '${0} does not match the specified data type (Integer)';
 
     constructor();
@@ -23,5 +22,3 @@ class IntImpl extends NumberImpl implements IField, INumberFluent {
         return super.isValid(value);
     }
 }
-
-export { IntImpl };

@@ -1,10 +1,12 @@
-import {Connection} from '../src/index';
 import * as should from 'should';
+
+import {Connection} from '../src/index';
+import {IRepository} from '../src/lib/repository';
 
 describe('With an empty Repository,', () => {
 
-    const db = new Connection('mongodb://localhost/repongo_test');
-    const repoUnderTest = db.createRepository('cats');
+    const db: Connection = new Connection('mongodb://localhost/repongo_test');
+    const repoUnderTest: IRepository = db.createRepository('cats');
 
     describe('when a cat is inserted', () => {
         it('Inserts one record that can be read back', (done: () => void) => {

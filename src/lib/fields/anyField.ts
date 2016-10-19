@@ -1,9 +1,7 @@
-import * as _ from 'lodash';
-
 import {IField, FieldRule, IFluent} from './base';
 import {stringFormat} from '../util';
 
-class AnyImpl implements IField, IFluent {
+export class AnyImpl implements IField, IFluent {
     static defaultRequiredMessage: string = '${0} is a required field';
 
     name: string;
@@ -19,7 +17,7 @@ class AnyImpl implements IField, IFluent {
 
     isValid(value: any): boolean {
         let result = true;
-        if (this.fieldIsRequired.value && _.isNil(value)) {
+        if (this.fieldIsRequired.value && value != null) {
             this.messages.push(stringFormat(this.fieldIsRequired.message, this.name));
             result = false;
         }
@@ -39,5 +37,3 @@ class AnyImpl implements IField, IFluent {
         return this;
     }
 }
-
-export { AnyImpl };

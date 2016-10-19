@@ -1,15 +1,15 @@
 import * as _ from 'lodash';
 
-import {IField, IFluent, FieldRule} from './base';
-import {stringFormat} from '../util';
-import {AnyImpl} from './anyField';
+import { IField, IFluent, FieldRule } from './base';
+import { stringFormat } from '../util';
+import { AnyImpl } from './anyField';
 
-interface IStringFluent extends IFluent {
+export interface IStringFluent extends IFluent {
     hasMaxLengthOf(value: number, message?: string): this;
     hasMinLengthOf(value: number, message?: string): this;
 }
 
-class StringImpl extends AnyImpl implements IField, IStringFluent {
+export class StringImpl extends AnyImpl implements IField, IStringFluent {
     static defaultMaxLengthMessage: string = '${0} exceeds the maximum length of ${1}';
     static defaultMinLengthMessage: string = '${0} is shorter than the minimum length of ${1}';
     static defaultTypeMessage: string = '${0} does not match the specified data type (String)';
@@ -54,10 +54,8 @@ class StringImpl extends AnyImpl implements IField, IStringFluent {
 
     hasMinLengthOf(value: number): this;
     hasMinLengthOf(value: number, message: string = StringImpl.defaultMinLengthMessage): this {
-        this.maxLength.value = value;
-        this.maxLength.setNonNullMessage(message);
+        this.minLength.value = value;
+        this.minLength.setNonNullMessage(message);
         return this;
     }
 }
-
-export { IStringFluent, StringImpl };
