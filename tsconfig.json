@@ -2,7 +2,15 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es5",
+
         "noImplicitAny": true,
+        "strictNullChecks": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+
         "sourceMap": true
     },
     "exclude": [

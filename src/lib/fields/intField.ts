@@ -9,7 +9,7 @@ export class IntImpl extends NumberImpl implements IField, INumberFluent {
 
     constructor();
     constructor(defaultValue: number);
-    constructor(defaultValue: number, message?: string);
+    constructor(defaultValue?: number, message?: string);
     constructor(defaultValue: number = 0, message: string = IntImpl.defaultTypeMessage) {
         super(defaultValue, message);
     }

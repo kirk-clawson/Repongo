@@ -34,11 +34,11 @@ export class NumberImpl extends AnyImpl implements IField, INumberFluent {
             this.messages.push(stringFormat(this.dataTypeMessage, this.name));
             return false;
         }
-        if (value > this.max.value) {
+        if (this.max.hasValue() && value > this.max.value) {
             this.messages.push(stringFormat(this.max.message, this.name, value, this.max.value));
             result = false;
         }
-        if (value < this.min.value) {
+        if (this.min.hasValue() && value < this.min.value) {
             this.messages.push(stringFormat(this.min.message, this.name, value, this.min.value));
             result = false;
         }

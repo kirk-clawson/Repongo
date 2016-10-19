@@ -11,7 +11,11 @@ export interface IFluent {
 }
 
 export class FieldRule<TRuleType> {
-    constructor(public value: TRuleType, public message: string) {
+    constructor(public value: TRuleType | null, public message: string) {
+    }
+
+    hasValue(): boolean {
+        return this.value != null;
     }
 
     setNonNullMessage(message?: string): void {

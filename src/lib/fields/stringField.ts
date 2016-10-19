@@ -34,11 +34,11 @@ export class StringImpl extends AnyImpl implements IField, IStringFluent {
             this.messages.push(stringFormat(this.dataTypeMessage, this.name));
             return false;
         }
-        if (value.length > this.maxLength.value) {
+        if (this.maxLength.hasValue() && value.length > this.maxLength.value) {
             this.messages.push(stringFormat(this.maxLength.message, this.name, this.maxLength.value));
             result = false;
         }
-        if (value.length < this.minLength.value) {
+        if (this.minLength.hasValue() && value.length < this.minLength.value) {
             this.messages.push(stringFormat(this.minLength.message, this.name, this.minLength.value));
             result = false;
         }
