@@ -1,35 +1,31 @@
 {
-  "name": "repongo",
-  "version": "0.1.0",
-  "description": "Repository Pattern implementation for MongoDB",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kirk-clawson/Repongo.git"
-  },
-  "keywords": [
-    "mongo",
-    "mongodb",
-    "repository"
-  ],
-  "author": "Kirk Clawson",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/kirk-clawson/Repongo/issues"
-  },
-  "homepage": "https://github.com/kirk-clawson/Repongo#readme",
-  "dependencies": {
-    "bluebird": "^3.3.1",
-    "lodash": "^4.5.1",
-    "mongojs": "^2.3.0"
-  },
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "mocha": "^2.4.5",
-    "should": "^8.2.2",
-    "ts-node": "^1.2.2"
-  }
+    "name": "repongo",
+    "version": "0.1.0",
+    "description": "Repository Pattern implementation for MongoDB",
+    "main": "main.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/kirk-clawson/Repongo.git"
+    },
+    "keywords": [
+        "mongo",
+        "mongodb",
+        "repository"
+    ],
+    "author": "Kirk Clawson",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/kirk-clawson/Repongo/issues"
+    },
+    "homepage": "https://github.com/kirk-clawson/Repongo#readme",
+    "dependencies": {
+        "bluebird": "^3.4.6",
+        "lodash": "^4.16.4",
+        "mongojs": "^2.3.0"
+    },
+    "devDependencies": {
+        "mocha": "^2.4.5",
+        "should": "^11.1.1",
+        "ts-node": "^1.6.0"
+    }
 }

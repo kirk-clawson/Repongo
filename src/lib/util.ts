@@ -7,9 +7,9 @@ interface IValidationStatus {
 }
 
 interface IMongoObject {
-    _id: any;
-    _v: string;
-    _validationResult: IValidationStatus;
+    _id?: any;
+    _v?: string;
+    validationResult?: IValidationStatus;
 }
 
 function getIdFromString(id: string): any {

@@ -78,7 +78,7 @@ class Schema implements ISchema {
         }
 
         // attach the validation result
-        object._validationResult = result;
+        object.validationResult = result;
     }
 
     public j2m(json: any): IMongoObject | IMongoObject[] {
@@ -88,7 +88,7 @@ class Schema implements ISchema {
             for (let i = 0; i < json.length; ++i) {
                 const current = <any>json[i];
                 this.validate(current);
-                if (current._validationResult.isValid) {
+                if (current.validationResult.isValid) {
                     bson.push(Schema.convertJsonToBson(current));
                 } else {
                     bson.push(current);
@@ -96,7 +96,7 @@ class Schema implements ISchema {
             }
         } else {
             this.validate(json);
-            if (json._validationResult.isValid) {
+            if (json.validationResult.isValid) {
                 bson = Schema.convertJsonToBson(json);
             } else {
                 bson = json;
@@ -112,14 +112,14 @@ class Schema implements ISchema {
             for (let i = 0; i < bson.length; i++) {
                 const current = Schema.convertBsonToJson(bson[i]);
                 this.validate(current);
-                if (current._validationResult.isValid) {
+                if (current.validationResult.isValid) {
                     json.push(current);
                 }
             }
         } else {
             let current = Schema.convertBsonToJson(bson);
             this.validate(current);
-            if (current._validationResult.isValid) {
+            if (current.validationResult.isValid) {
                 json = current;
             }
         }
