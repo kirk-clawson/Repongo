@@ -1,9 +1,7 @@
-/**
- * Created by clawsonk on 10/19/2016.
- */
-
-var mongo = require('mongojs');
-
+    /**
+     * Created by clawsonk on 10/19/2016.
+     */
+import mongo from 'mongojs';
 import {IRepository, RepositoryFactory} from "./repository";
 import {ISchema} from "./schema";
 
