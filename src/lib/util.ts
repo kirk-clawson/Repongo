@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
-import mongo from 'mongojs';
+import _ = require('lodash');
+import mongo = require('mongojs');
 
 interface IValidationStatus {
     isValid: boolean;

@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ = require('lodash');
 import {IMongoObject, getIdFromString} from './util';
 import {IFluent, IField} from "./fields/base";
 

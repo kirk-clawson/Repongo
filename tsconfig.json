@@ -3,7 +3,7 @@
         "module": "commonjs",
         "target": "es5",
 
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "strictNullChecks": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,

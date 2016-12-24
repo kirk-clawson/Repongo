@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
-import * as Promise from 'bluebird';
+import _ = require('lodash');
+import Promise = require('bluebird');
 import {ISchema} from './schema';
 import {IQuery} from './queryBuilder';
 import {SchemaFactory} from './schema';
@@ -30,7 +30,7 @@ class Repository<TModel> implements IRepository<TModel> {
         this._schema = schema;
         this._dbCollection = db.collection(this._schema.catalogName);
 
-        var contextOpts = {
+        const contextOpts = {
             context: this._dbCollection
         };
         this._promiseApi = {
@@ -57,11 +57,11 @@ class Repository<TModel> implements IRepository<TModel> {
 
     public save(item: TModel): Promise<TModel> {
         // assume that item is singular
-        var result = this._schema.j2m(item);
-        var validResult: any;
+        const result = this._schema.j2m(item);
+        let validResult: any;
         if (result !== undefined && _.isArray(result)) {
             validResult = [];
-            for (var i = 0; i < result.length; ++i) {
+            for (let i = 0; i < result.length; ++i) {
                 let currentResult: IMongoObject = result[i];
                 if (currentResult && currentResult.validationResult && currentResult.validationResult.isValid) {
                     delete currentResult.validationResult; // don't want to persist this field in the DB
@@ -91,11 +91,11 @@ class Repository<TModel> implements IRepository<TModel> {
 
 export class RepositoryFactory {
 
-    public static create<TModel>(schema: string, db: any): IRepository<TModel>;
-    public static create<TModel>(schema: ISchema, db: any): IRepository<TModel>;
+    //public static create<TModel>(schema: string, db: any): IRepository<TModel>;
+    //public static create<TModel>(schema: ISchema, db: any): IRepository<TModel>;
     public static create<TModel>(schema: string | ISchema, db: any): IRepository<TModel> {
         if (_.isString(schema)) {
-            var tempSchema = SchemaFactory.create(schema, true);
+            const tempSchema = SchemaFactory.create(schema, true);
             return new Repository<TModel>(tempSchema, db);
         } else {
             return new Repository<TModel>(schema, db);

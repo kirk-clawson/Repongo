@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ = require('lodash');
 
 import { IField } from './base';
 import { stringFormat } from '../util';
