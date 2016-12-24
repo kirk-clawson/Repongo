@@ -1,4 +1,4 @@
-import * as should from 'should';
+import should = require('should');
 
 import { Connection, IRepository } from '../src/main';
 

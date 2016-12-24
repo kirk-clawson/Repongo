@@ -1,4 +1,4 @@
-import * as should from 'should';
+import should = require('should');
 
 import { Connection, FieldFactory, SchemaFactory, ISchema, IRepository, IMongoObject } from '../src/main';
 
