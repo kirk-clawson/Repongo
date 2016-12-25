@@ -18,9 +18,6 @@ export class NumberImpl extends AnyImpl implements IField, INumberFluent {
     min: FieldRule<number>;
     dataTypeMessage: string;
 
-    constructor();
-    constructor(defaultValue: number);
-    constructor(defaultValue?: number, message?: string);
     constructor(defaultValue: number = 0, message: string = NumberImpl.defaultTypeMessage) {
         super(defaultValue);
         this.max = new FieldRule<number>(null, NumberImpl.defaultMaxMessage);
@@ -45,16 +42,12 @@ export class NumberImpl extends AnyImpl implements IField, INumberFluent {
         return result;
     }
 
-    hasMaximumOf(value: number): this;
-    hasMaximumOf(value: number, message?: string): this;
     hasMaximumOf(value: number, message: string = NumberImpl.defaultMaxMessage): this {
         this.max.value = value;
         this.max.setMessage(message);
         return this;
     }
 
-    hasMinimumOf(value: number): this;
-    hasMinimumOf(value: number, message?: string): this;
     hasMinimumOf(value: number, message: string = NumberImpl.defaultMinMessage): this {
         this.min.value = value;
         this.min.setMessage(message);

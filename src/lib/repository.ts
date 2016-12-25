@@ -1,5 +1,6 @@
 import _ = require('lodash');
 import Promise = require('bluebird');
+
 import {ISchema} from './schema';
 import {IQuery} from './queryBuilder';
 import {SchemaFactory} from './schema';

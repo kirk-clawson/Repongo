@@ -2,6 +2,7 @@
      * Created by clawsonk on 10/19/2016.
      */
 import mongo = require('mongojs');
+
 import {IRepository, RepositoryFactory} from "./repository";
 import {ISchema} from "./schema";
 
